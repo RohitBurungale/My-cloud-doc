@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Appwrite SDK -->
+<script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Inter", sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.box {
+  width: 420px;
+  background: #020617;
+  padding: 36px;
+  border-radius: 18px;
+  border: 1px solid #1e293b;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+}
+
+h2 {
+  text-align: center;
+  color: #e5e7eb;
+  margin-bottom: 22px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #64748b;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+}
+
+.secondary {
+  background: transparent;
+  border: 1px solid #1e293b;
+  color: #cbd5f5;
+}
+
+.hidden {
+  display: none;
+}
+
+.helper {
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+  <h2>Sign in</h2>
+  <input id="loginEmail" type="email" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Password">
+
+  <button class="primary" onclick="login()">Login</button>
+  <button class="secondary" onclick="openRegister()">Create Account</button>
+
+  <div class="helper">Created by Rohit Burungale</div>
+</div>
+
+<!-- REGISTER -->
+<div class="box hidden" id="registerBox">
+  <h2>Create account</h2>
+  <input id="regName" placeholder="Full Name">
+  <input id="regEmail" type="email" placeholder="Email">
+  <input id="regPhone" type="tel" placeholder="Phone Number">
+  <input id="regPassword" type="password" placeholder="Password">
+  <input id="regConfirm" type="password" placeholder="Confirm Password">
+
+  <button class="primary" onclick="register()">Register</button>
+  <button class="secondary" onclick="openLogin()">Back to Login</button>
+
+  <div class="helper">Use a strong password</div>
+</div>
+
+<script>
+/* APPWRITE CONFIG */
+const client = new Appwrite.Client()
+  .setEndpoint("https://fra.cloud.appwrite.io/v1")
+  .setProject("6956479a002cb6075a9d");
+
+const account = new Appwrite.Account(client);
+
+/* AUTO REDIRECT IF LOGGED IN */
+account.get()
+  .then(() => window.location.href = "Home.html")
+  .catch(() => {});
+
+/* UI */
+function openRegister() {
+  loginBox.classList.add("hidden");
+  registerBox.classList.remove("hidden");
+}
+
+function openLogin() {
+  registerBox.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+}
+
+/* PASSWORD VALIDATION */
+function strongPassword(p) {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(p);
+}
+
+/* REGISTER */
+async function register() {
+  const name = regName.value.trim();
+  const email = regEmail.value.trim();
+  const phone = regPhone.value.trim();
+  const pass = regPassword.value;
+  const confirm = regConfirm.value;
+
+  if (!name || !email || !phone || !pass || !confirm) {
+    alert("All fields are required");
+    return;
+  }
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    alert("Enter valid 10-digit phone number");
+    return;
+  }
+
+  if (pass !== confirm) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  if (!strongPassword(pass)) {
+    alert("Password must be strong");
+    return;
+  }
+
+  try {
+    await account.create(Appwrite.ID.unique(), email, pass, name);
+  } catch (e) {
+    if (e.code !== 409) {
+      alert(e.message);
+      return;
+    }
+  }
+
+  await account.createEmailPasswordSession(email, pass);
+  alert(`Welcome, ${name}! 🎉`);
+  window.location.href = "Home.html";
+}
+
+/* LOGIN */
+async function login() {
+  try {
+    await account.createEmailPasswordSession(
+      loginEmail.value,
+      loginPassword.value
+    );
+    window.location.href = "Home.html";
+  } catch {
+    alert("Invalid email or password");
+  }
+}
+</script>
+
+</body>
+</html>
