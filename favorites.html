@@ -1,595 +1,796 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Favorites - My-Cloud-Doc</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-}
-
-.header {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.logo-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 8px;
-}
-
-.nav-link {
-  color: rgba(255,255,255,0.9);
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 500;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-link:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.nav-link.active {
-  background: rgba(255,255,255,0.25);
-  font-weight: 600;
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 12px;
-  transition: background 0.2s;
-  position: relative;
-}
-
-.user-section:hover {
-  background: rgba(255,255,255,0.15);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: white;
-  color: #4e54c8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.user-name {
-  color: white;
-  font-weight: 600;
-}
-
-.user-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  padding: 8px;
-  min-width: 200px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.2s;
-}
-
-.user-dropdown-menu.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #1e293b;
-}
-
-.dropdown-item:hover {
-  background: #f1f5f9;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: #e2e8f0;
-  margin: 8px 0;
-}
-
-.container {
-  display: flex;
-  max-width: 1400px;
-  margin: 24px auto;
-  gap: 24px;
-  padding: 0 24px;
-}
-
-.sidebar {
-  width: 280px;
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  height: fit-content;
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 8px;
-  color: #64748b;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.sidebar-item:hover {
-  background: #f1f5f9;
-  color: #1e293b;
-}
-
-.sidebar-item.active {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.sidebar-icon {
-  font-size: 20px;
-}
-
-.storage-section {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.storage-title {
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #1e293b;
-}
-
-.storage-text {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 8px;
-}
-
-.storage-bar-bg {
-  background: #e2e8f0;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.storage-bar {
-  background: linear-gradient(90deg, #4e54c8, #8f94fb);
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s;
-  border-radius: 4px;
-}
-
-.upgrade-btn {
-  margin-top: 16px;
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.upgrade-btn:hover {
-  transform: translateY(-2px);
-}
-
-.main-content {
-  flex: 1;
-}
-
-.page-header {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.page-header-left h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.page-header-left p {
-  color: #64748b;
-  font-size: 16px;
-}
-
-.favorites-count {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  color: white;
-  padding: 16px 24px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-}
-
-.favorites-count-number {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.favorites-count-label {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.files-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-.files-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.search-bar {
-  padding: 10px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  width: 300px;
-  font-size: 14px;
-}
-
-.sort-wrapper {
-  position: relative;
-}
-
-.sort-btn {
-  padding: 10px 16px;
-  background: #f1f5f9;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  color: #64748b;
-}
-
-.sort-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  padding: 8px;
-  min-width: 150px;
-  z-index: 100;
-}
-
-.sort-menu.hidden {
-  display: none;
-}
-
-.sort-option {
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.sort-option:hover {
-  background: #f1f5f9;
-}
-
-#files {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.file-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  padding: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.file-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 16px 32px rgba(0,0,0,0.12);
-  border-color: #f59e0b;
-}
-
-.file-card.highlight {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
-}
-
-.favorite-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255,255,255,0.8);
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
-  color: #f59e0b;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 6px 10px;
-  backdrop-filter: blur(10px);
-}
-
-.favorite-toggle:hover {
-  transform: scale(1.15) rotate(10deg);
-  background: #fef3c7;
-  border-color: #fcd34d;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-}
-
-.file-preview {
-  font-size: 48px;
-  text-align: center;
-  padding: 20px 0;
-}
-
-.file-name {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #1e293b;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.file-meta {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 16px;
-}
-
-.file-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.file-actions button {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.file-actions .open {
-  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
-  color: #4e54c8;
-  border: 1px solid #c7d2fe;
-}
-
-.file-actions .open:hover {
-  background: linear-gradient(135deg, #c7d2fe 0%, #bfdbfe 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(78, 84, 200, 0.2);
-}
-
-.file-actions .download {
-  background: linear-gradient(135deg, #dbeafe 0%, #d1d5db 100%);
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
-}
-
-.file-actions .download:hover {
-  background: linear-gradient(135deg, #bfdbfe 0%, #a5b4fc 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
-
-.file-actions .rename {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  color: #d97706;
-  border: 1px solid #fcd34d;
-}
-
-.file-actions .rename:hover {
-  background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
-}
-
-.file-actions .delete {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-}
-
-.file-actions .delete:hover {
-  background: linear-gradient(135deg, #fecaca 0%, #f87171 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
-}
-
-.file-actions button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.empty {
-  text-align: center;
-  padding: 80px 20px;
-  color: #94a3b8;
-}
-
-.empty-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
-}
-
-.empty-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #64748b;
-  margin-bottom: 8px;
-}
-
-.empty-text {
-  font-size: 16px;
-  color: #94a3b8;
-  margin-bottom: 24px;
-}
-
-.empty-btn {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.empty-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(78, 84, 200, 0.4);
-}
-
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    width: 100%;
-  }
-  
-  .nav-links {
-    display: none;
-  }
-  
-  #files {
-    grid-template-columns: 1fr;
-  }
-  
-  .search-bar {
-    width: 100%;
-  }
-  
-  .files-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-  
-  .page-header {
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Favorites - My-Cloud-Doc</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary-color: #f8fafc;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --text-color: #1e293b;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+      --hover-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-hover: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      color: var(--text-color);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-link {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+      background: rgba(255,255,255,0.25);
+      font-weight: 600;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      position: relative;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .user-section:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .user-name {
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 8px;
+      min-width: 200px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s;
+    }
+
+    .user-dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-color);
+    }
+
+    .dropdown-item:hover {
+      background: var(--hover-color);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1400px;
+      margin: 20px auto;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 80px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 8px;
+      color: var(--text-light);
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .sidebar-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    .sidebar-item:hover {
+      background: var(--hover-color);
+      color: var(--text-color);
+      transform: translateX(4px);
+    }
+
+    .sidebar-item.active {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      font-weight: 600;
+    }
+
+    .sidebar-icon {
+      font-size: 18px;
+    }
+
+    .storage-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .storage-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-color);
+    }
+
+    .storage-text {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .storage-bar-bg {
+      background: var(--border-color);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .storage-bar {
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+      height: 100%;
+      width: 0%;
+      transition: width 1s ease;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .storage-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .upgrade-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .upgrade-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .page-header {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .page-header-left h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--primary-color);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-header-left p {
+      color: var(--text-light);
+      font-size: 15px;
+    }
+
+    .favorites-count {
+      background: linear-gradient(135deg, var(--accent-color) 0%, #d97706 100%);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      min-width: 140px;
+    }
+
+    .favorites-count-number {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .favorites-count-label {
+      font-size: 13px;
+      opacity: 0.95;
+      font-weight: 500;
+    }
+
+    .files-section {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .files-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 240px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .sort-select {
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+      outline: none;
+      min-width: 140px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sort-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    #files {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .file-card {
+      background: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      animation: fadeInUp 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .file-card:nth-child(1) { animation-delay: 0.05s; }
+    .file-card:nth-child(2) { animation-delay: 0.1s; }
+    .file-card:nth-child(3) { animation-delay: 0.15s; }
+    .file-card:nth-child(4) { animation-delay: 0.2s; }
+    .file-card:nth-child(5) { animation-delay: 0.25s; }
+    .file-card:nth-child(6) { animation-delay: 0.3s; }
+
+    .file-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent-color);
+      background: white;
+    }
+
+    .fav-indicator {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-color);
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .fav-indicator:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .file-icon {
+      font-size: 32px;
+      text-align: center;
+      margin-bottom: 12px;
+      margin-top: 8px;
+      color: var(--primary-color);
+    }
+
+    .file-name {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-color);
+    }
+
+    .file-meta {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .file-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-view {
+      background: #dbeafe;
+      color: var(--primary-color);
+    }
+
+    .btn-view:hover {
+      background: #bfdbfe;
+      transform: translateY(-1px);
+    }
+
+    .btn-download {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .btn-download:hover {
+      background: #a7f3d0;
+      transform: translateY(-1px);
+    }
+
+    .btn-unfavorite {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-unfavorite:hover {
+      background: #fecaca;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .btn-delete:hover {
+      background: #fde68a;
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+      grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.4;
+    }
+
+    .empty-title {
+      font-size: 20px;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .empty-text {
+      font-size: 15px;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .empty-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    .empty-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      border-radius: 12px 12px 0 0;
+      color: white;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-size: 14px;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .modal-footer {
+      padding: 16px 20px;
+      background: var(--secondary-color);
+      border-radius: 0 0 12px 12px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-secondary {
+      padding: 8px 16px;
+      background: var(--secondary-color);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; position: static; }
+      .nav-links { display: none; }
+      #files { grid-template-columns: 1fr; }
+      .search-bar { width: 100%; }
+      .page-header { flex-direction: column; align-items: stretch; }
+      .favorites-count { width: 100%; }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="header">
@@ -600,72 +801,70 @@ body {
   
   <div class="nav-links">
     <a href="home.html" class="nav-link">
-      <span>🏠</span> Dashboard
+      <i class="fas fa-home"></i> Dashboard
     </a>
     <a href="documents.html" class="nav-link">
-      <span>📄</span> My Documents
+      <i class="fas fa-file-alt"></i> My Documents
     </a>
     <a href="favorites.html" class="nav-link active">
-      <span>⭐</span> Favorites
+      <i class="fas fa-star"></i> Favorites
     </a>
   </div>
   
   <div class="user-section" id="userSection" onclick="toggleUserDropdown()">
     <div class="user-avatar" id="userAvatar">U</div>
     <span class="user-name" id="userName">User</span>
-    <span style="color: white;">▼</span>
+    <i class="fas fa-chevron-down" style="color: white; font-size: 12px;"></i>
     
     <div class="user-dropdown-menu" id="userDropdownMenu">
       <div class="dropdown-item" onclick="goToProfile()">
-        <span>👤</span> Profile Settings
+        <i class="fas fa-user"></i> Profile Settings
       </div>
       <div class="dropdown-divider"></div>
       <div class="dropdown-item" onclick="logout()">
-        <span>🚪</span> Logout
+        <i class="fas fa-sign-out-alt"></i> Logout
       </div>
     </div>
   </div>
 </div>
 
 <div class="container">
-  
   <div class="sidebar">
     <a href="home.html" class="sidebar-item">
-      <span class="sidebar-icon">📊</span>
+      <i class="fas fa-chart-line sidebar-icon"></i>
       <span>Dashboard</span>
     </a>
     <a href="documents.html" class="sidebar-item">
-      <span class="sidebar-icon">📄</span>
+      <i class="fas fa-file-alt sidebar-icon"></i>
       <span>My Documents</span>
     </a>
     <a href="favorites.html" class="sidebar-item active">
-      <span class="sidebar-icon">⭐</span>
+      <i class="fas fa-star sidebar-icon"></i>
       <span>Favorites</span>
     </a>
     <a href="#" class="sidebar-item">
-      <span class="sidebar-icon">👥</span>
+      <i class="fas fa-users sidebar-icon"></i>
       <span>Shared with Me</span>
     </a>
-    <a href="#" class="sidebar-item">
-      <span class="sidebar-icon">🗑️</span>
+    <a href="trash.html" class="sidebar-item">
+      <i class="fas fa-trash-alt sidebar-icon"></i>
       <span>Trash</span>
     </a>
-    
+
     <div class="storage-section">
       <div class="storage-title">Storage</div>
-      <div class="storage-text" id="storageText">0 GB / 50 GB used</div>
+      <div class="storage-text" id="storageText">0 MB / 50 GB used</div>
       <div class="storage-bar-bg">
         <div class="storage-bar" id="storageBar"></div>
       </div>
-      <button class="upgrade-btn">Upgrade Plan</button>
+      <button class="upgrade-btn"><i class="fas fa-bolt"></i> Upgrade Plan</button>
     </div>
   </div>
-  
+
   <div class="main-content">
-    
     <div class="page-header">
       <div class="page-header-left">
-        <h1><span>⭐</span> My Favorites</h1>
+        <h1><i class="fas fa-star"></i> My Favorites</h1>
         <p>Quick access to your starred documents</p>
       </div>
       <div class="favorites-count">
@@ -673,154 +872,384 @@ body {
         <div class="favorites-count-label">Favorite Files</div>
       </div>
     </div>
-    
+
     <div class="files-section">
       <div class="files-header">
-        <div class="section-title">Favorite Documents</div>
-        
-        <div style="display: flex; gap: 12px;">
-          <input type="text" id="searchInput" class="search-bar" placeholder="Search favorites..." oninput="filterFiles()">
-          
-          <div class="sort-wrapper">
-            <button class="sort-btn" onclick="toggleSortMenu()">Sort ▼</button>
-            <div class="sort-menu hidden" id="sortMenu">
-              <div class="sort-option" onclick="setSort('newest')">Newest First</div>
-              <div class="sort-option" onclick="setSort('oldest')">Oldest First</div>
-              <div class="sort-option" onclick="setSort('az')">A-Z</div>
-              <div class="sort-option" onclick="setSort('za')">Z-A</div>
-            </div>
+        <div class="section-title">
+          <i class="fas fa-bookmark"></i> Starred Documents
+        </div>
+        <div class="controls">
+          <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search favorites..." />
           </div>
+          <select class="sort-select" id="sortSelect">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">Name A–Z</option>
+            <option value="za">Name Z–A</option>
+          </select>
         </div>
       </div>
-      
-      <div id="files"></div>
+
+      <div id="files">
+        <div class="empty-state">
+          <div class="empty-icon">⭐</div>
+          <div class="empty-title">Loading favorites...</div>
+          <p>Please wait...</p>
+        </div>
+      </div>
     </div>
-    
   </div>
-  
 </div>
 
-<script src="config.js"></script>
-<script src="home.js"></script>
+<!-- Rename Modal -->
+<div id="renameModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fas fa-edit"></i> Rename File</h2>
+    </div>
+    <div class="modal-body">
+      <label class="modal-label">New File Name</label>
+      <input type="text" id="renameInput" class="modal-input" placeholder="Enter new name">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeRenameModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmRename()">Rename</button>
+    </div>
+  </div>
+</div>
 
 <script>
-// Override the loadFiles function to only show favorites
-const originalLoadFiles = window.loadFiles;
+// ========== APPWRITE CONFIG ==========
+const client = new Appwrite.Client()
+  .setEndpoint("https://fra.cloud.appwrite.io/v1")
+  .setProject("6956479a002cb6075a9d");
 
-window.loadFiles = async function() {
-  await originalLoadFiles();
-  
-  // Filter to show only favorites
-  const favoriteFilesList = allFiles.filter(f => favoriteFiles.includes(f.$id));
-  
-  // Update favorites count
-  const countEl = document.getElementById('favoritesCountNumber');
-  if (countEl) {
-    countEl.textContent = favoriteFilesList.length;
+const account = new Appwrite.Account(client);
+const storage = new Appwrite.Storage(client);
+const databases = new Appwrite.Databases(client);
+
+const BUCKET_ID = "6957d9df0019e749a227";
+const DATABASE_ID = "6956ba3a003ab5b4406a";
+const COLLECTION_ID = "files";
+
+let userId = null;
+let currentRenameDocId = null;
+let currentRenameFileId = null;
+
+// ========== INIT ==========
+async function init() {
+  try {
+    const user = await account.get();
+    userId = user.$id;
+    
+    document.getElementById('userName').textContent = user.name || 'User';
+    document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+    
+    await Promise.all([
+      renderFiles(),
+      updateStorageBar()
+    ]);
+  } catch (error) {
+    console.error("Auth failed:", error);
+    window.location.href = "index.html";
   }
-  
-  // Render only favorite files
-  renderFiles(favoriteFilesList);
-};
+}
 
-// Override renderFiles to show empty state for favorites
-const originalRenderFiles = window.renderFiles;
+// ========== RENDER FAVORITES FROM APPWRITE ==========
+async function renderFiles() {
+  const container = document.getElementById('files');
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
 
-window.renderFiles = function(list) {
-  const filesContainer = document.getElementById('files');
-  if (!filesContainer) return;
-  
-  filesContainer.innerHTML = "";
+  try {
+    // Get all documents for this user
+    const res = await databases.listDocuments(
+      DATABASE_ID,
+      COLLECTION_ID,
+      [Appwrite.Query.equal("userId", userId)]
+    );
 
-  if (!list.length) {
-    filesContainer.innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">⭐</div>
-        <div class="empty-title">No favorites yet</div>
-        <div class="empty-text">Star your important files to see them here</div>
-        <a href="documents.html" class="empty-btn">Browse Documents</a>
+    // Filter only favorites (check localStorage for favorite status)
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    let favoriteDocs = res.documents.filter(doc => {
+      const localDoc = localDocs.find(d => d.id === doc.fileId);
+      return localDoc && localDoc.isFavorite === true;
+    });
+
+    // Apply search filter
+    if (searchTerm) {
+      favoriteDocs = favoriteDocs.filter(doc => 
+        doc.fileName.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // Sort
+    if (sort === 'az') {
+      favoriteDocs.sort((a, b) => a.fileName.localeCompare(b.fileName));
+    } else if (sort === 'za') {
+      favoriteDocs.sort((a, b) => b.fileName.localeCompare(a.fileName));
+    } else if (sort === 'oldest') {
+      favoriteDocs.sort((a, b) => new Date(a.$createdAt) - new Date(b.$createdAt));
+    } else {
+      favoriteDocs.sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
+    }
+
+    // Update count
+    document.getElementById('favoritesCountNumber').textContent = favoriteDocs.length;
+
+    // Render
+    if (favoriteDocs.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">⭐</div>
+          <div class="empty-title">No favorites yet</div>
+          <div class="empty-text">Star your important files to see them here</div>
+          <a href="documents.html" class="empty-btn">
+            <i class="fas fa-folder-open"></i> Browse Documents
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = favoriteDocs.map(doc => `
+      <div class="file-card">
+        <div class="fav-indicator" onclick="toggleFavorite('${doc.fileId}', '${escapeHtml(doc.fileName)}')" title="Remove from favorites">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="file-icon">${getIconForFile(doc.fileName)}</div>
+        <div class="file-name" title="${escapeHtml(doc.fileName)}">${escapeHtml(doc.fileName)}</div>
+        <div class="file-meta">
+          ${formatFileSize(doc.fileSize)} • ${new Date(doc.$createdAt).toLocaleDateString()}
+        </div>
+        <div class="file-actions">
+          <button class="action-btn btn-view" onclick="viewFile('${doc.fileId}')">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button class="action-btn btn-download" onclick="downloadFile('${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button class="action-btn btn-delete" onclick="openRenameModal('${doc.$id}', '${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-edit"></i> Rename
+          </button>
+          <button class="action-btn btn-unfavorite" onclick="deleteFile('${doc.$id}', '${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error("Load favorites error:", error);
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-title">Failed to load favorites</div>
+        <div class="empty-text">Please try refreshing the page</div>
       </div>
     `;
+  }
+}
+
+// ========== TOGGLE FAVORITE ==========
+async function toggleFavorite(fileId, fileName) {
+  try {
+    // Update in localStorage
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    const docIndex = localDocs.findIndex(d => d.id === fileId);
+    
+    if (docIndex !== -1) {
+      localDocs[docIndex].isFavorite = false;
+      localStorage.setItem("documents", JSON.stringify(localDocs));
+      
+      alert(`⭐ "${fileName}" removed from favorites`);
+      await renderFiles();
+    }
+  } catch (error) {
+    console.error("Toggle favorite error:", error);
+    alert('❌ Failed to update favorite status');
+  }
+}
+
+// ========== FILE ICON ==========
+function getIconForFile(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  switch(ext) {
+    case 'pdf': return '📄';
+    case 'doc': case 'docx': return '📘';
+    case 'xls': case 'xlsx': return '📊';
+    case 'png': case 'jpg': case 'jpeg': case 'gif': case 'svg': return '🖼️';
+    case 'txt': return '📝';
+    case 'zip': case 'rar': return '📦';
+    case 'mp4': case 'avi': case 'mov': return '🎥';
+    case 'mp3': case 'wav': return '🎵';
+    default: return '📄';
+  }
+}
+
+// ========== FORMAT ==========
+function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ========== VIEW FILE ==========
+function viewFile(fileId) {
+  const url = storage.getFileView(BUCKET_ID, fileId);
+  window.open(url, '_blank');
+}
+
+// ========== DOWNLOAD FILE ==========
+function downloadFile(fileId, fileName) {
+  const url = storage.getFileDownload(BUCKET_ID, fileId);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ========== RENAME MODAL ==========
+function openRenameModal(docId, fileId, currentName) {
+  currentRenameDocId = docId;
+  currentRenameFileId = fileId;
+  document.getElementById('renameInput').value = currentName;
+  document.getElementById('renameModal').classList.add('active');
+}
+
+function closeRenameModal() {
+  document.getElementById('renameModal').classList.remove('active');
+  currentRenameDocId = null;
+  currentRenameFileId = null;
+}
+
+async function confirmRename() {
+  const newName = document.getElementById('renameInput').value.trim();
+  if (!newName) {
+    alert('⚠️ Please enter a valid name.');
     return;
   }
 
-  // Use the original render logic for files
-  list.forEach(f => {
-    const card = document.createElement("div");
-    card.className = "file-card";
-    if (f.$id === lastUploadedId) {
-      card.classList.add("highlight");
-      setTimeout(() => lastUploadedId = null, 3000);
+  try {
+    // Update in Appwrite Database
+    await databases.updateDocument(
+      DATABASE_ID,
+      COLLECTION_ID,
+      currentRenameDocId,
+      { fileName: newName }
+    );
+
+    // Update in localStorage
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    const docIndex = localDocs.findIndex(d => d.id === currentRenameFileId);
+    if (docIndex !== -1) {
+      localDocs[docIndex].name = newName;
+      localStorage.setItem("documents", JSON.stringify(localDocs));
     }
 
-    const iconClass = getFileIconClass(f.mimeType);
-    const icon = getFileIcon(f);
-    const isFavorite = favoriteFiles.includes(f.$id);
-    const canOpen =
-      f.mimeType === "application/pdf" ||
-      f.mimeType === "text/html" ||
-      f.mimeType?.startsWith("image/") ||
-      f.mimeType?.startsWith("text/");
-
-    const safeName = escapeHtml(f.name);
-    const timeAgo = getTimeAgo(f.$createdAt);
-
-    card.innerHTML = `
-      <button class="favorite-toggle ${isFavorite ? 'active' : ''}" 
-              onclick="event.stopPropagation(); toggleFavorite('${f.$id}', '${safeName}')" 
-              title="Remove from favorites">
-        ★
-      </button>
-      <div class="file-preview" style="font-size: 48px; text-align: center; padding: 20px 0;">${icon}</div>
-      <div class="file-name" title="${safeName}">${f.name}</div>
-      <div class="file-meta">${formatFileSize(f.sizeOriginal)} • ${timeAgo}</div>
-      <div class="file-actions">
-        <button class="open" onclick="openFile('${f.$id}')" ${!canOpen ? 'disabled' : ''}>Open</button>
-        <button class="download" onclick="downloadFile('${f.$id}', '${safeName}')">Download</button>
-        <button class="rename" onclick="renameFile('${f.docId}', '${safeName}')">Rename</button>
-        <button class="delete" onclick="deleteFile('${f.docId}', '${safeName}')">Delete</button>
-      </div>
-    `;
-
-    filesContainer.appendChild(card);
-  });
-};
-
-// Override filterFiles to work with favorites
-window.filterFiles = function() {
-  const searchInput = document.getElementById('searchInput');
-  if (!searchInput) return;
-  
-  const q = searchInput.value.trim().toLowerCase();
-  const favoriteFilesList = allFiles.filter(f => favoriteFiles.includes(f.$id));
-  const filtered = favoriteFilesList.filter(f => f.name.toLowerCase().includes(q));
-  renderFiles(filtered);
-};
-
-// Override sort to work with favorites
-const originalSortAndRenderFiles = window.sortAndRenderFiles;
-
-window.sortAndRenderFiles = function() {
-  const favoriteFilesList = allFiles.filter(f => favoriteFiles.includes(f.$id));
-  let sorted = [...favoriteFilesList];
-
-  switch(currentSort) {
-    case 'newest':
-      sorted.sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt));
-      break;
-    case 'oldest':
-      sorted.sort((a, b) => new Date(a.$createdAt) - new Date(b.$createdAt));
-      break;
-    case 'az':
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-      break;
-    case 'za':
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
-      break;
+    alert(`✅ File renamed to "${newName}"`);
+    closeRenameModal();
+    await renderFiles();
+  } catch (error) {
+    console.error("Rename error:", error);
+    alert('❌ Failed to rename file');
   }
+}
 
-  renderFiles(sorted);
-};
+// ========== DELETE FILE ==========
+async function deleteFile(docId, fileId, fileName) {
+  if (!confirm(`Delete "${fileName}" permanently?`)) return;
+
+  try {
+    // Delete from Appwrite Storage
+    await storage.deleteFile(BUCKET_ID, fileId);
+    
+    // Delete from Appwrite Database
+    await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, docId);
+
+    // Delete from localStorage
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    const updatedDocs = localDocs.filter(d => d.id !== fileId);
+    localStorage.setItem("documents", JSON.stringify(updatedDocs));
+
+    alert(`🗑️ "${fileName}" deleted successfully`);
+    await renderFiles();
+    await updateStorageBar();
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert('❌ Failed to delete file');
+  }
+}
+
+// ========== UPDATE STORAGE BAR ==========
+async function updateStorageBar() {
+  try {
+    const res = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Appwrite.Query.equal("userId", userId)
+    ]);
+    
+    let totalBytes = res.documents.reduce((sum, doc) => sum + (doc.fileSize || 0), 0);
+    const totalMB = totalBytes / (1024 * 1024);
+    const percentage = Math.min((totalMB / (50 * 1024)) * 100, 100);
+    
+    document.getElementById('storageBar').style.width = percentage + '%';
+    document.getElementById('storageText').textContent = `${totalMB.toFixed(2)} MB / 50 GB used`;
+  } catch (error) {
+    console.error("Storage update error:", error);
+  }
+}
+
+// ========== SEARCH & SORT ==========
+document.getElementById('searchInput').addEventListener('input', renderFiles);
+document.getElementById('sortSelect').addEventListener('change', renderFiles);
+
+// ========== USER DROPDOWN ==========
+function toggleUserDropdown() {
+  document.getElementById('userDropdownMenu').classList.toggle('active');
+}
+
+function goToProfile() {
+  window.location.href = 'profile.html';
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    account.deleteSession('current').then(() => {
+      window.location.href = 'index.html';
+    });
+  }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const userSection = document.getElementById('userSection');
+  const dropdown = document.getElementById('userDropdownMenu');
+  if (userSection && !userSection.contains(e.target)) {
+    dropdown.classList.remove('active');
+  }
+});
+
+// Close modal when clicking outside
+document.getElementById('renameModal').addEventListener('click', (e) => {
+  if (e.target.id === 'renameModal') {
+    closeRenameModal();
+  }
+});
+
+// ========== INIT ON LOAD ==========
+document.addEventListener('DOMContentLoaded', init);
 </script>
 
 </body>

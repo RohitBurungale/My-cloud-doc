@@ -4,10 +4,54 @@
 <meta charset="UTF-8">
 <title>My Profile - My-Cloud-Doc</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(78, 84, 200, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(78, 84, 200, 0.6); }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -19,8 +63,8 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
   padding: 20px;
-  overflow-x: hidden;
   position: relative;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -30,7 +74,9 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -41,82 +87,67 @@ body > * {
 }
 
 .header {
-  background: white;
-  padding: 16px 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 20px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border-radius: 20px;
   margin-bottom: 32px;
   flex-wrap: wrap;
-  gap: 12px;
-  width: 100%;
-  border: 1px solid #e8ecf1;
+  gap: 16px;
   animation: slideDown 0.6s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #0f172a;
+  color: #1e293b;
   font-size: 24px;
   font-weight: 700;
   text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 .logo-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 24px;
   color: white;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(78, 84, 200, 0.4);
+  animation: float 3s ease-in-out infinite;
 }
 
-.logo:hover .logo-icon {
-  transform: scale(1.08);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .back-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #0f172a;
+  color: #1e293b;
   text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #f0f2f5;
-  border: 1px solid #e8ecf1;
-  cursor: pointer;
-  white-space: nowrap;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border: 1px solid #cbd5e1;
   position: relative;
   overflow: hidden;
 }
@@ -128,21 +159,8 @@ body > * {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.1);
-  transition: left 0.3s ease;
-  z-index: 0;
-}
-
-.back-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(102, 126, 234, 0.1);
-  transition: left 0.3s ease;
-  z-index: 0;
+  background: linear-gradient(90deg, transparent, rgba(78, 84, 200, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
 .back-btn:hover::before {
@@ -150,10 +168,10 @@ body > * {
 }
 
 .back-btn:hover {
-  background: #e8ecf1;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-  color: #667eea;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  border-color: #4e54c8;
+  color: #4e54c8;
 }
 
 .logout-btn {
@@ -161,262 +179,19 @@ body > * {
   align-items: center;
   gap: 8px;
   color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   border: none;
   cursor: pointer;
-  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
 }
 
 .logout-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,0.15);
-  transition: left 0.3s ease;
-  z-index: 0;
-}
-
-.logout-btn:hover::before {
-  left: 100%;
-}
-
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(102, 126, 234, 0.4);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 12px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.profile-header {
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-  border-radius: 24px;
-  padding: 48px 40px;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
-  border: 1px solid #e8ecf1;
-  margin-bottom: 40px;
-  display: flex;
-  align-items: center;
-  gap: 48px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  animation: fadeInUp 0.8s ease-out 0.2s both;
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-header::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.06) 0%, transparent 70%);
-  border-radius: 50%;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.profile-info {
-  flex: 1;
-  min-width: 200px;
-}
-
-.profile-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.avatar-section {
-  position: relative;
-}
-
-.profile-avatar {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 64px;
-  font-weight: 700;
-  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  flex-shrink: 0;
-  border: 4px solid white;
-}
-
-.profile-avatar::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-  transform: rotate(45deg);
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-.profile-avatar:hover {
-  transform: scale(1.08);
-  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.35);
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.avatar-upload-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  padding: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.profile-avatar:hover .avatar-upload-overlay {
-  opacity: 1;
-}
-
-#avatarInput {
-  display: none;
-}
-
-.avatar-badge {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 32px;
-  height: 32px;
-  background: #10b981;
-  border-radius: 50%;
-  border: 4px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-.profile-name {
-  font-size: 36px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.profile-email {
-  font-size: 15px;
-  color: #64748b;
-  margin-bottom: 16px;
-  transition: color 0.3s ease;
-}
-
-.profile-email:hover {
-  color: #4e54c8;
-}
-
-.profile-stats {
-  display: flex;
-  gap: 32px;
-  margin-top: 24px;
-}
-
-.stat-item {
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #f8f9ff 0%, #f3f4ff 100%);
-  border-radius: 16px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.stat-item:hover {
-  background: linear-gradient(135deg, #f3f4ff 0%, #eef0ff 100%);
-  border-color: rgba(102, 126, 234, 0.2);
-  transform: translateY(-2px);
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #667eea;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #64748b;
-  margin-top: 6px;
-  font-weight: 500;
-}
-
-.edit-profile-btn {
-  padding: 12px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-size: 15px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.edit-profile-btn::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -429,89 +204,330 @@ body > * {
   transition: width 0.6s, height 0.6s;
 }
 
-.edit-profile-btn:hover::after {
+.logout-btn:hover::before {
   width: 300px;
   height: 300px;
 }
 
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(239, 68, 68, 0.4);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  animation: slideUp 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(78, 84, 200, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+}
+
+.avatar-section {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  font-weight: 700;
+  box-shadow: 0 16px 48px rgba(78, 84, 200, 0.3);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 6px solid white;
+}
+
+.profile-avatar::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  transform: rotate(45deg);
+  animation: shimmer 3s infinite;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.08) rotate(5deg);
+  box-shadow: 0 20px 60px rgba(78, 84, 200, 0.4);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 0 50% 50%;
+}
+
+.profile-avatar:hover .avatar-upload-overlay {
+  opacity: 1;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 50%;
+  border: 5px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+#avatarInput {
+  display: none;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.profile-name {
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.profile-email {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 24px;
+  transition: color 0.3s ease;
+}
+
+.profile-email:hover {
+  color: #4e54c8;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  padding: 20px 28px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #f3f4ff 100%);
+  border-radius: 16px;
+  border: 2px solid rgba(78, 84, 200, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.stat-item:hover {
+  background: linear-gradient(135deg, #f3f4ff 0%, #eef0ff 100%);
+  border-color: rgba(78, 84, 200, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(78, 84, 200, 0.2);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edit-profile-btn {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 15px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(78, 84, 200, 0.3);
+}
+
+.edit-profile-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.edit-profile-btn:hover::before {
+  width: 350px;
+  height: 350px;
+}
+
 .edit-profile-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 16px 40px rgba(78, 84, 200, 0.4);
 }
 
 .edit-profile-btn.cancel {
-  background: #ef4444;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
 }
 
 .save-profile-btn {
-  padding: 12px 32px;
+  padding: 14px 32px;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-size: 15px;
-  margin-left: 12px;
   display: none;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
 }
 
 .save-profile-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.4);
 }
 
 .content-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   gap: 32px;
 }
 
 .card {
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
   padding: 32px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  border: 1px solid #e8ecf1;
-  width: 100%;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: slideUp 0.8s ease-out forwards;
 }
 
-.card:nth-child(1) {
-  animation-delay: 0.3s;
-}
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
 
-.card:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.card:nth-child(3) {
-  animation-delay: 0.5s;
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #4e54c8 0%, #8f94fb 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.12);
-  border-color: rgba(102, 126, 234, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #1e293b;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   position: relative;
-  padding-bottom: 16px;
+  padding-bottom: 20px;
 }
 
 .card-title::after {
@@ -519,16 +535,16 @@ body > * {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
   border-radius: 2px;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
 }
 
 .form-group {
@@ -543,47 +559,50 @@ body > * {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: #374151;
+  letter-spacing: 0.3px;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-radius: 12px;
   border: 2px solid #e5e7eb;
   background: #f9fafb;
   font-size: 15px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: #1e293b;
+  font-family: 'Inter', sans-serif;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #4e54c8;
   background: white;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 0 12px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 0 0 4px rgba(78, 84, 200, 0.1), 0 4px 16px rgba(78, 84, 200, 0.15);
   transform: translateY(-2px);
 }
 
 .form-group input:disabled,
 .form-group select:disabled {
   background: #f1f5f9;
-  color: #64748b;
+  color: #94a3b8;
   cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
 .email-card {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
   border-radius: 16px;
-  padding: 20px;
+  padding: 24px;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
-  border: 2px solid #bae6fd;
+  border: 2px solid #93c5fd;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -594,26 +613,32 @@ body > * {
   position: absolute;
   left: 0;
   top: 0;
-  width: 4px;
+  width: 5px;
   height: 100%;
-  background: linear-gradient(180deg, #0284c7 0%, #06b6d4 100%);
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
 }
 
 .email-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.15);
+  transform: translateX(6px);
+  box-shadow: 0 10px 32px rgba(59, 130, 246, 0.2);
+  border-color: #60a5fa;
 }
 
 .email-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-size: 28px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease;
+}
+
+.email-card:hover .email-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .email-info {
@@ -621,45 +646,52 @@ body > * {
 }
 
 .email-address {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
-  color: #0c4a6e;
+  color: #1e3a8a;
   margin-bottom: 4px;
 }
 
 .email-label {
   font-size: 13px;
-  color: #0369a1;
+  color: #3b82f6;
+  font-weight: 500;
 }
 
 .add-email-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 10px;
   color: #4e54c8;
   font-weight: 600;
   cursor: pointer;
-  padding: 12px;
-  border-radius: 12px;
-  transition: all 0.2s;
-  background: #f1f5f9;
+  padding: 16px;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border: 2px dashed #cbd5e1;
 }
 
 .add-email-btn:hover {
-  background: #e2e8f0;
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+  border-color: #4e54c8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 84, 200, 0.15);
 }
 
 .account-info {
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 12px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 16px;
   margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 16px 0;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -670,6 +702,7 @@ body > * {
 .info-label {
   font-size: 14px;
   color: #64748b;
+  font-weight: 500;
 }
 
 .info-value {
@@ -679,59 +712,78 @@ body > * {
 }
 
 .danger-zone {
-  padding: 24px;
-  background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+  padding: 28px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
   border-radius: 16px;
-  border: 1px solid #fecaca;
+  border: 2px solid #fca5a5;
+  position: relative;
+  overflow: hidden;
+}
+
+.danger-zone::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
 }
 
 .danger-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: #dc2626;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .danger-text {
   font-size: 14px;
   color: #991b1b;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  line-height: 1.6;
 }
 
 .danger-btn {
-  padding: 12px 24px;
-  background: #dc2626;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border: none;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.danger-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.danger-btn:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .danger-btn:hover {
-  background: #b91c1c;
   transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(239, 68, 68, 0.4);
 }
 
-.logout-btn {
-  padding: 10px 20px;
-  background: #64748b;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-left: 12px;
-}
-
-.logout-btn:hover {
-  background: #475569;
-  transform: translateY(-2px);
-}
-
-/* Modal Styles */
 .modal {
   display: none;
   position: fixed;
@@ -740,80 +792,90 @@ body > * {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
-  animation: fadeIn 0.3s;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
   background-color: white;
-  margin: 10% auto;
+  margin: 8% auto;
   padding: 0;
-  border-radius: 20px;
+  border-radius: 24px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  animation: slideDown 0.3s;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  max-width: 540px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+  animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 24px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px 20px 0 0;
+  padding: 28px 36px;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
   color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
 }
 
 .modal-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.modal-body {
-  padding: 32px;
-}
-
-.modal-footer {
-  padding: 20px 32px;
-  background: #f8fafc;
-  border-radius: 0 0 20px 20px;
-  border-top: 1px solid #e8ecf1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  position: relative;
 }
 
 .close-modal {
   color: white;
   float: right;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
   cursor: pointer;
   line-height: 1;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+  position: absolute;
+  right: 24px;
+  top: 24px;
 }
 
 .close-modal:hover {
   opacity: 1;
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 36px;
+}
+
+.modal-footer {
+  padding: 24px 36px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #374151;
 }
 
 .modal-input {
@@ -823,9 +885,9 @@ body > * {
   border: 2px solid #e5e7eb;
   background: #f9fafb;
   font-size: 15px;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   color: #1e293b;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-family: 'Inter', sans-serif;
 }
 
@@ -833,20 +895,12 @@ body > * {
   outline: none;
   border-color: #4e54c8;
   background: white;
-  box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.1);
-}
-
-.modal-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #374151;
+  box-shadow: 0 0 0 4px rgba(78, 84, 200, 0.1);
 }
 
 .btn-primary {
-  padding: 12px 28px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -854,9 +908,9 @@ body > * {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-size: 15px;
+  box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
 
 .btn-primary::before {
@@ -878,790 +932,88 @@ body > * {
 }
 
 .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(78, 84, 200, 0.4);
 }
 
 .btn-secondary {
-  padding: 12px 28px;
+  padding: 14px 32px;
   background: #e5e7eb;
   color: #374151;
   border: none;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   font-size: 15px;
 }
 
 .btn-secondary:hover {
   background: #d1d5db;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-.email-list {
-  margin-bottom: 16px;
-}
-
-.email-item {
-  background: #f8fafc;
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 2px solid #e5e7eb;
-}
-
-.email-item-text {
-  flex: 1;
-}
-
-.email-item-address {
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 4px;
-}
-
-.email-item-label {
-  font-size: 13px;
-  color: #64748b;
-}
-
-.remove-email-btn {
-  padding: 8px 16px;
-  background: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-
-.remove-email-btn:hover {
-  background: #dc2626;
-}
-
-/* Large screens (1200px+) - Desktop */
-@media (min-width: 1200px) {
-  body {
-    padding: 24px;
-  }
-  
-  .container {
-    padding: 0 16px;
-  }
-  
-  .header {
-    padding: 16px 32px;
-    margin-bottom: 24px;
-  }
-  
-  .profile-header {
-    padding: 40px;
-    gap: 32px;
-  }
-  
-  .card {
-    padding: 32px;
-  }
-  
+@media (max-width: 1024px) {
   .content-grid {
-    gap: 24px;
+    grid-template-columns: 1fr;
   }
 }
 
-/* Desktop (1025px - 1199px) */
-@media (min-width: 1025px) and (max-width: 1199px) {
+@media (max-width: 768px) {
   body {
-    padding: 20px;
+    padding: 12px;
   }
   
   .header {
-    padding: 16px 24px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    padding: 16px 20px;
   }
   
   .profile-header {
-    padding: 32px;
-    gap: 28px;
-  }
-  
-  .card {
-    padding: 28px;
-  }
-  
-  .content-grid {
-    gap: 20px;
-  }
-  
-  .form-grid {
-    gap: 18px;
-  }
-}
-
-/* Large tablet (769px - 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-  body {
-    padding: 16px;
-  }
-  
-  .header {
-    padding: 14px 20px;
-    margin-bottom: 16px;
-  }
-  
-  .header h1 {
-    font-size: 22px;
-  }
-  
-  .logo-icon {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .back-btn,
-  .logout-btn {
-    padding: 9px 16px;
-    font-size: 14px;
-  }
-  
-  .profile-header {
-    padding: 28px 24px;
-    gap: 24px;
-    flex-direction: row;
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 24px;
   }
   
   .profile-avatar {
-    width: 100px;
-    height: 100px;
-    font-size: 42px;
+    width: 140px;
+    height: 140px;
+    font-size: 56px;
   }
   
-  .profile-info {
-    flex: 1;
+  .profile-name {
+    font-size: 32px;
+  }
+  
+  .profile-stats {
+    justify-content: center;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    font-size: 48px;
   }
   
   .profile-name {
     font-size: 28px;
   }
   
-  .profile-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-  
-  .content-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-  
-  .form-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  
-  .card {
-    padding: 24px;
-  }
-  
-  .card-title {
-    font-size: 18px;
-  }
-}
-
-/* Tablet (481px - 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  body {
-    padding: 12px;
-  }
-  
-  .header {
-    flex-direction: row;
-    gap: 10px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 14px;
-    justify-content: space-between;
-  }
-  
-  .logo {
-    font-size: 18px;
-    gap: 6px;
-  }
-  
-  .logo-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-  
-  .header-actions {
-    display: flex;
-    gap: 6px;
-    flex-wrap: nowrap;
-  }
-  
-  .back-btn,
-  .logout-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-    min-height: 36px;
-    flex: 0 1 auto;
-  }
-  
-  .container {
-    padding: 0 8px;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-    padding: 24px 16px;
-    gap: 16px;
-    margin-bottom: 16px;
-    align-items: center;
-  }
-  
-  .profile-avatar {
-    width: 90px;
-    height: 90px;
-    font-size: 40px;
-  }
-  
-  .profile-info {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .profile-name {
-    font-size: 24px;
-    margin-bottom: 4px;
-  }
-  
-  .profile-email {
-    font-size: 13px;
-  }
-  
-  .profile-stats {
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-  
   .stat-item {
-    padding: 8px 12px;
-    min-width: 75px;
-  }
-  
-  .stat-value {
-    font-size: 18px;
-  }
-  
-  .stat-label {
-    font-size: 11px;
-  }
-  
-  .profile-actions {
-    width: 100%;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  .edit-profile-btn,
-  .save-profile-btn {
-    width: calc(50% - 4px);
-    padding: 10px 12px;
-    margin-left: 0;
-    margin-bottom: 0;
-    font-size: 13px;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  
-  .form-group input,
-  .form-group select {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-  
-  .form-group label {
-    font-size: 12px;
-    margin-bottom: 6px;
-  }
-  
-  .card {
-    padding: 18px 14px;
-    margin-top: 12px;
-    border-radius: 16px;
-  }
-  
-  .card-title {
-    font-size: 16px;
-    margin-bottom: 14px;
-    gap: 8px;
-  }
-  
-  .content-grid {
-    gap: 12px;
-  }
-  
-  .modal-content {
-    width: 85%;
-    margin: 20% auto;
-    border-radius: 16px;
-  }
-  
-  .modal-header {
-    padding: 14px 16px;
-  }
-  
-  .modal-title {
-    font-size: 16px;
-    gap: 6px;
-  }
-  
-  .modal-body {
-    padding: 14px 16px;
-  }
-  
-  .modal-input {
-    padding: 9px 12px;
-    font-size: 12px;
-  }
-  
-  .modal-footer {
-    flex-direction: row;
-    gap: 8px;
-    padding: 12px;
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    flex: 1;
-    padding: 9px 12px;
-    font-size: 12px;
-  }
-  
-  .danger-zone {
-    padding: 14px;
-    border-radius: 12px;
-  }
-  
-  .danger-title {
-    font-size: 15px;
-    margin-bottom: 8px;
-  }
-  
-  .danger-text {
-    font-size: 12px;
-    margin-bottom: 12px;
-  }
-  
-  .danger-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-  
-  .email-card {
-    padding: 12px;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .email-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  
-  .email-info {
-    flex: 1;
-  }
-  
-  .email-address {
-    font-size: 13px;
-  }
-  
-  .email-label {
-    font-size: 11px;
-  }
-  
-  .remove-email-btn {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 11px;
-    margin-top: 4px;
-  }
-  
-  .add-email-btn {
-    width: 100%;
-    padding: 10px;
-    font-size: 12px;
-  }
-  
-  .account-info {
-    padding: 12px;
-  }
-  
-  .info-row {
-    padding: 8px 0;
-  }
-  
-  .info-label {
-    font-size: 12px;
-  }
-  
-  .info-value {
-    font-size: 12px;
+    min-width: 100px;
   }
 }
-
-/* Small mobile (max 480px) - Mobile First */
-@media (max-width: 480px) {
-  body {
-    padding: 8px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%),
-                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.08) 0%, transparent 50%);
-  }
-  
-  .header {
-    padding: 12px 16px;
-    flex-direction: column;
-    gap: 8px;
-    border-radius: 14px;
-    margin-bottom: 16px;
-    align-items: stretch;
-  }
-  
-  .logo {
-    gap: 6px;
-    font-size: 16px;
-    justify-content: center;
-    order: 1;
-  }
-  
-  .logo-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-  
-  .header-actions {
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    order: 2;
-  }
-  
-  .back-btn,
-  .logout-btn {
-    padding: 9px 14px;
-    font-size: 12px;
-    gap: 4px;
-    min-height: 36px;
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .container {
-    padding: 0 8px;
-  }
-  
-  .profile-header {
-    padding: 20px 16px;
-    gap: 12px;
-    margin-bottom: 20px;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-  }
-  
-  .avatar-section {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .profile-avatar {
-    width: 100px;
-    height: 100px;
-    font-size: 42px;
-  }
-  
-  .profile-info {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .profile-name {
-    font-size: 18px;
-    margin-bottom: 2px;
-    font-weight: 700;
-  }
-  
-  .profile-email {
-    font-size: 11px;
-  }
-  
-  .profile-stats {
-    gap: 6px;
-    justify-content: center;
-    width: 100%;
-    margin-top: 8px;
-  }
-  
-  .stat-item {
-    padding: 6px 8px;
-    min-width: 60px;
-  }
-  
-  .stat-value {
-    font-size: 14px;
-  }
-  
-  .stat-label {
-    font-size: 9px;
-  }
-  
-  .profile-actions {
-    width: 100%;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  
-  .edit-profile-btn,
-  .save-profile-btn {
-    flex: 1;
-    min-width: 80px;
-    padding: 7px 10px;
-    margin-left: 0;
-    margin-bottom: 0;
-    font-size: 11px;
-    border-radius: 8px;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .form-group {
-    margin-bottom: 0;
-  }
-  
-  .form-group label {
-    font-size: 11px;
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-  
-  .form-group input,
-  .form-group select {
-    padding: 8px 10px;
-    font-size: 11px;
-    border-radius: 8px;
-  }
-  
-  .card {
-    padding: 12px 10px;
-    margin-top: 8px;
-    border-radius: 12px;
-  }
-  
-  .card-title {
-    font-size: 14px;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  
-  .card-title span {
-    font-size: 16px;
-  }
-  
-  .content-grid {
-    gap: 8px;
-  }
-  
-  .modal-content {
-    width: 90%;
-    margin: 25% auto;
-    border-radius: 12px;
-  }
-  
-  .modal-header {
-    padding: 12px 12px;
-  }
-  
-  .modal-title {
-    font-size: 14px;
-    gap: 6px;
-  }
-  
-  .modal-body {
-    padding: 12px 12px;
-  }
-  
-  .modal-input {
-    padding: 8px 10px;
-    font-size: 11px;
-    margin-bottom: 8px;
-  }
-  
-  .modal-label {
-    font-size: 11px;
-    margin-bottom: 4px;
-  }
-  
-  .close-modal {
-    font-size: 20px;
-    top: 8px;
-    right: 10px;
-  }
-  
-  .modal-footer {
-    flex-direction: column;
-    gap: 6px;
-    padding: 10px;
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-  
-  .danger-zone {
-    padding: 12px 10px;
-    border-radius: 10px;
-  }
-  
-  .danger-title {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  
-  .danger-text {
-    font-size: 11px;
-    margin-bottom: 10px;
-  }
-  
-  .danger-btn {
-    padding: 7px 12px;
-    font-size: 11px;
-  }
-  
-  .email-card {
-    padding: 10px 8px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  
-  .email-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-  }
-  
-  .email-info {
-    width: 100%;
-  }
-  
-  .email-address {
-    font-size: 12px;
-  }
-  
-  .email-label {
-    font-size: 10px;
-  }
-  
-  .remove-email-btn {
-    width: 100%;
-    padding: 7px 10px;
-    font-size: 10px;
-  }
-  
-  .add-email-btn {
-    width: 100%;
-    padding: 8px;
-    font-size: 11px;
-  }
-  
-  .account-info {
-    padding: 10px 8px;
-  }
-  
-  .info-row {
-    padding: 6px 0;
-  }
-  
-  .info-label {
-    font-size: 11px;
-  }
-  
-  .info-value {
-    font-size: 11px;
-  }
-}
-body {
-      font-family: Inter, Arial, sans-serif;
-      background: #f4f5f7;
-      padding: 40px;
-    }
-
-    .card {
-      max-width: 500px;
-      margin: auto;
-    }
-
-    .danger-zone {
-      background: #fff1f1;
-      border: 1px solid #f5b5b5;
-      border-radius: 10px;
-      padding: 20px;
-    }
-
-    .danger-title {
-      color: #d32f2f;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .danger-text {
-      color: #b71c1c;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-
-    .danger-btn {
-      background: #d32f2f;
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .danger-btn:hover {
-      background: #b71c1c;
-    }
-
 </style>
 </head>
 
@@ -1673,18 +1025,19 @@ body {
     <span>My-Cloud-Doc</span>
   </a>
   
-  <a href="home.html" class="back-btn">
-    <span>←</span> Back to Dashboard
-  </a>
-  
-  <button class="logout-btn" onclick="handleLogout()">
-    🚪 Logout
-  </button>
+  <div class="header-actions">
+    <a href="home.html" class="back-btn">
+      <span>←</span> Back to Dashboard
+    </a>
+    
+    <button class="logout-btn" onclick="handleLogout()">
+      🚪 Logout
+    </button>
+  </div>
 </div>
 
 <div class="container">
   
-  <!-- Profile Header -->
   <div class="profile-header">
     <div class="avatar-section">
       <div class="profile-avatar" id="profileAvatar" onclick="document.getElementById('avatarInput').click()">
@@ -1705,8 +1058,8 @@ body {
           <div class="stat-label">Documents</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value" id="statStorage">0 GB</div>
-          <div class="stat-label">Storage Used</div>
+          <div class="stat-value" id="statStorage">0 MB</div>
+          <div class="stat-label">Storage</div>
         </div>
         <div class="stat-item">
           <div class="stat-value" id="statFavorites">0</div>
@@ -1715,8 +1068,8 @@ body {
       </div>
     </div>
     
-    <div>
-      <button class="edit-profile-btn" id="editBtn" onclick="toggleEditMode(this)">
+    <div class="profile-actions">
+      <button class="edit-profile-btn" id="editBtn" onclick="toggleEditMode()">
         ✏️ Edit Profile
       </button>
       <button class="save-profile-btn" id="saveBtn" onclick="saveProfile()">
@@ -1727,7 +1080,6 @@ body {
   
   <div class="content-grid">
     
-    <!-- Left Column - Personal Information -->
     <div>
       <div class="card">
         <div class="card-title">
@@ -1737,12 +1089,12 @@ body {
         <div class="form-grid">
           <div class="form-group">
             <label>Full Name</label>
-            <input type="text" id="fullName" disabled>
+            <input type="text" id="fullName" placeholder="Enter your full name" disabled>
           </div>
           
           <div class="form-group">
             <label>Nick Name</label>
-            <input type="text" id="nickName" disabled>
+            <input type="text" id="nickName" placeholder="Enter nickname" disabled>
           </div>
           
           <div class="form-group">
@@ -1803,10 +1155,8 @@ body {
       </div>
     </div>
     
-    <!-- Right Column -->
     <div>
       
-      <!-- Email Address Card -->
       <div class="card">
         <div class="card-title">
           <span>📧</span> Email Address
@@ -1827,7 +1177,6 @@ body {
         </div>
       </div>
       
-      <!-- Account Info Card -->
       <div class="card" style="margin-top: 24px;">
         <div class="card-title">
           <span>ℹ️</span> Account Info
@@ -1849,16 +1198,15 @@ body {
         </div>
       </div>
       
-      <div class="card">
-    <div class="danger-zone">
-      <div class="danger-title">⚠️ Danger Zone</div>
-      <div class="danger-text">
-        Once you delete your account, there is no going back. Please be certain.
+      <div class="card" style="margin-top: 24px;">
+        <div class="danger-zone">
+          <div class="danger-title">⚠️ Danger Zone</div>
+          <div class="danger-text">
+            Once you delete your account, there is no going back. All your data will be permanently deleted.
+          </div>
+          <button class="danger-btn" onclick="deleteAccount()">🗑️ Delete Account</button>
+        </div>
       </div>
-      <button class="danger-btn" onclick="deleteAccount()">🗑️ Delete Account</button>
-    </div>
-  </div>
-
       
     </div>
     
@@ -1866,14 +1214,13 @@ body {
   
 </div>
 
-<!-- Add Email Modal -->
 <div id="addEmailModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
+      <span class="close-modal" onclick="closeAddEmailModal()">&times;</span>
       <h2 class="modal-title">
         <span>📧</span> Add Email Address
       </h2>
-      <span class="close-modal" onclick="closeAddEmailModal()">&times;</span>
     </div>
     <div class="modal-body">
       <label class="modal-label">Email Address</label>
@@ -1888,25 +1235,24 @@ body {
   </div>
 </div>
 
-<!-- Delete Account Modal -->
 <div id="deleteAccountModal" class="modal">
   <div class="modal-content">
     <div class="modal-header" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+      <span class="close-modal" onclick="closeDeleteAccountModal()">&times;</span>
       <h2 class="modal-title">
         <span>⚠️</span> Delete Account
       </h2>
-      <span class="close-modal" onclick="closeDeleteAccountModal()">&times;</span>
     </div>
     <div class="modal-body">
-      <div class="warning-text">
+      <p style="font-size: 14px; color: #64748b; margin-bottom: 20px; line-height: 1.6;">
         This action cannot be undone. All your data will be permanently deleted.
-      </div>
+      </p>
       <label class="modal-label">Type "DELETE" to confirm</label>
       <input type="text" id="deleteConfirmInput" class="modal-input" placeholder="Type DELETE to confirm">
       <p style="font-size: 14px; color: #64748b; margin-top: 16px; line-height: 1.6;">
         This will permanently delete:
       </p>
-      <ul style="font-size: 14px; color: #64748b; margin-top: 8px; padding-left: 24px; line-height: 1.8;">
+      <ul style="font-size: 14px; color: #64748b; margin-top: 12px; padding-left: 24px; line-height: 1.8;">
         <li>Your profile and personal information</li>
         <li>All uploaded documents and files</li>
         <li>Your account settings and preferences</li>
@@ -1915,115 +1261,15 @@ body {
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
-      <button class="btn-danger" onclick="confirmDeleteAccount()">Delete My Account</button>
+      <button class="danger-btn" onclick="confirmDeleteAccount()">Delete My Account</button>
     </div>
   </div>
 </div>
 
 <script>
+let additionalEmails = [];
+let isEditMode = false;
 
-    // Appwrite setup
-    const client = new Appwrite.Client()
-      .setEndpoint("https://fra.cloud.appwrite.io/v1")
-      .setProject("6956479a002cb6075a9d");
-
-    const account = new Appwrite.Account(client);
-    const storage = new Appwrite.Storage(client);
-    const databases = new Appwrite.Databases(client);
-
-    const DATABASE_ID = "6956ba3a003ab5b4406a";
-    const COLLECTION_ID = "files";
-    const BUCKET_ID = "6957d9df0019e749a227";
-
-    let userId = null;
-    let additionalEmails = [];
-    let isEditMode = false;
-
-    async function deleteAccount() {
-      // First show modal for confirmation
-      openDeleteAccountModal();
-    }
-
-    // Confirm delete account (called from modal)
-    async function confirmDeleteAccount() {
-      const confirmInput = document.getElementById('deleteConfirmInput');
-      const confirmText = confirmInput.value.trim();
-      
-      if (confirmText !== 'DELETE') {
-        alert('⚠️ Please type "DELETE" to confirm account deletion');
-        return;
-      }
-      
-      if (!confirm('This is your final warning. Are you absolutely sure you want to delete your account? This action CANNOT be undone!')) {
-        return;
-      }
-      
-      try {
-        // Delete all user documents first
-        const res = await databases.listDocuments(
-          DATABASE_ID,
-          COLLECTION_ID,
-          [
-            Appwrite.Query.equal("userId", userId),
-            Appwrite.Query.limit(100)
-          ]
-        );
-        
-        // Delete each document and its file
-        for (const doc of res.documents) {
-          try {
-            // Delete the file from storage
-            await storage.deleteFile(BUCKET_ID, doc.fileId);
-          } catch (e) {
-            console.error('Error deleting file:', e);
-          }
-          
-          try {
-            // Delete the database record
-            await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, doc.$id);
-          } catch (e) {
-            console.error('Error deleting document:', e);
-          }
-        }
-        
-        // Clear all localStorage data
-        localStorage.clear();
-        
-        // Delete the Appwrite account session
-        await account.deleteSession('current');
-        
-        alert('✅ Your account has been permanently deleted. Redirecting to login page...');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500);
-        
-      } catch (error) {
-        console.error('Error deleting account:', error);
-        
-        // Even if backend deletion fails, clear local data
-        localStorage.clear();
-        alert('✅ Account deletion completed. Redirecting to login page...');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500);
-      }
-    }
-
-    // Open delete account modal
-    function openDeleteAccountModal() {
-      document.getElementById('deleteAccountModal').style.display = 'block';
-      document.getElementById('deleteConfirmInput').value = '';
-      setTimeout(() => document.getElementById('deleteConfirmInput').focus(), 100);
-    }
-
-    // Close delete account modal
-    function closeDeleteAccountModal() {
-      document.getElementById('deleteAccountModal').style.display = 'none';
-      document.getElementById('deleteConfirmInput').value = '';
-    }
-  
-
-// Load additional emails from storage
 function loadAdditionalEmails() {
   const stored = localStorage.getItem('additionalEmails');
   if (stored) {
@@ -2037,7 +1283,6 @@ function loadAdditionalEmails() {
   }
 }
 
-// Display additional emails
 function displayAdditionalEmails() {
   const container = document.getElementById('additionalEmailsList');
   if (!container) return;
@@ -2054,25 +1299,22 @@ function displayAdditionalEmails() {
         <div class="email-address">${email.address}</div>
         <div class="email-label">${email.label || 'Additional email'}</div>
       </div>
-      <button class="remove-email-btn" onclick="removeEmail(${index})" style="margin-left: 12px; padding: 6px 12px; font-size: 12px;">Remove</button>
+      <button class="btn-secondary" onclick="removeEmail(${index})" style="padding: 8px 16px; font-size: 13px;">Remove</button>
     </div>
   `).join('');
 }
 
-// Open add email modal
 function openAddEmailModal() {
   document.getElementById('addEmailModal').style.display = 'block';
   document.getElementById('newEmailInput').value = '';
   document.getElementById('newEmailLabel').value = '';
-  document.getElementById('newEmailInput').focus();
+  setTimeout(() => document.getElementById('newEmailInput').focus(), 100);
 }
 
-// Close add email modal
 function closeAddEmailModal() {
   document.getElementById('addEmailModal').style.display = 'none';
 }
 
-// Add new email
 function addNewEmail() {
   const emailInput = document.getElementById('newEmailInput');
   const labelInput = document.getElementById('newEmailLabel');
@@ -2080,7 +1322,6 @@ function addNewEmail() {
   const email = emailInput.value.trim();
   const label = labelInput.value.trim();
   
-  // Validate email
   if (!email) {
     alert('⚠️ Please enter an email address');
     return;
@@ -2092,7 +1333,6 @@ function addNewEmail() {
     return;
   }
   
-  // Check if email already exists
   const primaryEmail = localStorage.getItem('userEmail');
   if (email === primaryEmail) {
     alert('⚠️ This is your primary email address');
@@ -2104,25 +1344,17 @@ function addNewEmail() {
     return;
   }
   
-  // Add email
   additionalEmails.push({
     address: email,
     label: label || 'Additional email'
   });
   
-  // Save to localStorage
   localStorage.setItem('additionalEmails', JSON.stringify(additionalEmails));
-  
-  // Update display
   displayAdditionalEmails();
-  
-  // Close modal
   closeAddEmailModal();
-  
   alert('✅ Email address added successfully!');
 }
 
-// Remove email
 function removeEmail(index) {
   if (confirm('Are you sure you want to remove this email address?')) {
     additionalEmails.splice(index, 1);
@@ -2132,72 +1364,185 @@ function removeEmail(index) {
   }
 }
 
-// Handle logout
-async function handleLogout() {
+function deleteAccount() {
+  document.getElementById('deleteAccountModal').style.display = 'block';
+  document.getElementById('deleteConfirmInput').value = '';
+  setTimeout(() => document.getElementById('deleteConfirmInput').focus(), 100);
+}
+
+function closeDeleteAccountModal() {
+  document.getElementById('deleteAccountModal').style.display = 'none';
+  document.getElementById('deleteConfirmInput').value = '';
+}
+
+function confirmDeleteAccount() {
+  const confirmInput = document.getElementById('deleteConfirmInput');
+  const confirmText = confirmInput.value.trim();
+  
+  if (confirmText !== 'DELETE') {
+    alert('⚠️ Please type "DELETE" to confirm account deletion');
+    return;
+  }
+  
+  if (!confirm('This is your final warning. Are you absolutely sure you want to delete your account? This action CANNOT be undone!')) {
+    return;
+  }
+  
+  localStorage.clear();
+  alert('✅ Your account has been permanently deleted. Redirecting to login page...');
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 1500);
+}
+
+function handleLogout() {
   if (confirm('Are you sure you want to logout?')) {
-    try {
-      // Logout from Appwrite
-      await account.deleteSession('current');
-      
-      // Clear specific session data (but keep profile data and avatars)
-      // This allows the user to keep their customizations
-      
-      alert('✅ Logged out successfully!');
-      window.location.href = 'index.html';
-    } catch (error) {
-      console.error('Logout error:', error);
-      alert('✅ Logged out locally!');
-      window.location.href = 'index.html';
+    alert('✅ Logged out successfully!');
+    window.location.href = 'index.html';
+  }
+}
+
+function loadAvatar() {
+  const savedAvatar = localStorage.getItem('userAvatar');
+  const avatarElement = document.getElementById('profileAvatar');
+  const avatarInitial = document.getElementById('avatarInitial');
+  
+  if (savedAvatar && avatarElement && avatarInitial) {
+    let imgElement = avatarElement.querySelector('img');
+    if (!imgElement) {
+      imgElement = document.createElement('img');
+      avatarElement.appendChild(imgElement);
     }
+    imgElement.src = savedAvatar;
+    avatarInitial.style.display = 'none';
   }
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-  const modal = document.getElementById('addEmailModal');
-  if (event.target === modal) {
-    closeAddEmailModal();
+function loadStats() {
+  const docs = JSON.parse(localStorage.getItem("documents")) || [];
+  
+  document.getElementById('statDocuments').textContent = docs.length;
+  
+  let totalBytes = 0;
+  docs.forEach(doc => {
+    const sizeStr = doc.size || '0 KB';
+    const size = parseFloat(sizeStr);
+    totalBytes += sizeStr.includes('MB') ? size * 1024 : size;
+  });
+  
+  const totalMB = totalBytes.toFixed(2);
+  document.getElementById('statStorage').textContent = totalMB + ' MB';
+  
+  const favorites = docs.filter(doc => doc.isFavorite);
+  document.getElementById('statFavorites').textContent = favorites.length;
+}
+
+function toggleEditMode() {
+  isEditMode = !isEditMode;
+  
+  const inputs = document.querySelectorAll('.form-group input, .form-group select');
+  inputs.forEach(el => {
+    el.disabled = !isEditMode;
+  });
+  
+  const editBtn = document.getElementById('editBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  
+  if (isEditMode) {
+    editBtn.innerHTML = '❌ Cancel';
+    editBtn.classList.add('cancel');
+    saveBtn.style.display = 'inline-block';
+  } else {
+    editBtn.innerHTML = '✏️ Edit Profile';
+    editBtn.classList.remove('cancel');
+    saveBtn.style.display = 'none';
+    loadProfileData();
   }
 }
 
-// Handle avatar upload (set up when DOM is ready)
+function loadProfileData() {
+  try {
+    const storedProfile = JSON.parse(localStorage.getItem("profileData") || "{}");
+    
+    if (storedProfile.fullName) {
+      document.getElementById('fullName').value = storedProfile.fullName;
+      document.getElementById('profileName').textContent = storedProfile.fullName;
+      document.getElementById('avatarInitial').textContent = storedProfile.fullName.charAt(0).toUpperCase();
+    }
+    
+    if (storedProfile.nickName) document.getElementById('nickName').value = storedProfile.nickName;
+    if (storedProfile.gender) document.getElementById('gender').value = storedProfile.gender;
+    if (storedProfile.country) document.getElementById('country').value = storedProfile.country;
+    if (storedProfile.language) document.getElementById('language').value = storedProfile.language;
+    if (storedProfile.timeZone) document.getElementById('timeZone').value = storedProfile.timeZone;
+    
+    if (storedProfile.email) {
+      document.getElementById('profileEmail').textContent = storedProfile.email;
+      document.getElementById('displayEmail').textContent = storedProfile.email;
+    }
+    
+    loadAvatar();
+  } catch (error) {
+    console.error('Error loading profile data:', error);
+  }
+}
+
+function saveProfile() {
+  try {
+    const profileData = {
+      fullName: document.getElementById('fullName').value.trim(),
+      nickName: document.getElementById('nickName').value.trim(),
+      gender: document.getElementById('gender').value,
+      country: document.getElementById('country').value,
+      language: document.getElementById('language').value,
+      timeZone: document.getElementById('timeZone').value,
+      email: localStorage.getItem("userEmail") || ""
+    };
+    
+    if (!profileData.fullName) {
+      alert("⚠️ Full name cannot be empty");
+      return;
+    }
+    
+    localStorage.setItem("profileData", JSON.stringify(profileData));
+    localStorage.setItem("userName", profileData.fullName);
+    localStorage.setItem("userInitial", profileData.fullName.charAt(0).toUpperCase());
+    
+    document.getElementById('profileName').textContent = profileData.fullName;
+    document.getElementById('avatarInitial').textContent = profileData.fullName.charAt(0).toUpperCase();
+    
+    alert("✅ Profile saved successfully");
+    toggleEditMode();
+  } catch (error) {
+    console.error('Error saving profile:', error);
+    alert('❌ Error saving profile. Please try again.');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const avatarInput = document.getElementById('avatarInput');
-  const profileAvatar = document.getElementById('profileAvatar');
-  
-  if (profileAvatar) {
-    profileAvatar.addEventListener('click', () => {
-      if (avatarInput) avatarInput.click();
-    });
-  }
   
   if (avatarInput) {
     avatarInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         alert('⚠️ Please select a valid image file');
         return;
       }
       
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('⚠️ Image size must be less than 5MB');
         return;
       }
       
-      // Read and display the image
       const reader = new FileReader();
       reader.onload = (event) => {
         const imageDataUrl = event.target.result;
-        
-        // Update avatar display
         const avatarElement = document.getElementById('profileAvatar');
         const avatarInitial = document.getElementById('avatarInitial');
         
-        // Check if image already exists, if not create it
         let imgElement = avatarElement.querySelector('img');
         if (!imgElement) {
           imgElement = document.createElement('img');
@@ -2207,7 +1552,6 @@ document.addEventListener('DOMContentLoaded', () => {
         imgElement.src = imageDataUrl;
         avatarInitial.style.display = 'none';
         
-        // Store in localStorage
         try {
           localStorage.setItem('userAvatar', imageDataUrl);
           alert('✅ Profile picture updated successfully!');
@@ -2220,242 +1564,22 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.readAsDataURL(file);
     });
   }
-}, { once: true });
-
-
-// Load avatar
-function loadAvatar() {
-  const savedAvatar = localStorage.getItem('userAvatar');
-  const avatarElement = document.getElementById('profileAvatar');
-  const avatarInitial = document.getElementById('avatarInitial');
   
-  if (savedAvatar) {
-    let imgElement = avatarElement.querySelector('img');
-    if (!imgElement) {
-      imgElement = document.createElement('img');
-      avatarElement.appendChild(imgElement);
-    }
-    imgElement.src = savedAvatar;
-    avatarInitial.style.display = 'none';
-  }
-}
-
-// Load stats from database
-async function loadStats() {
-  if (!userId) return;
-  
-  try {
-    // Get all documents for this user
-    const res = await databases.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-      [
-        Appwrite.Query.equal("userId", userId),
-        Appwrite.Query.limit(100)
-      ]
-    );
-
-    // Calculate total documents
-    const totalDocuments = res.documents.length;
-    document.getElementById('statDocuments').textContent = totalDocuments;
-
-    // Calculate total storage
-    let totalBytes = 0;
-    res.documents.forEach(doc => {
-      totalBytes += doc.fileSize || 0;
-    });
-    const totalGB = (totalBytes / (1024 * 1024 * 1024)).toFixed(2);
-    document.getElementById('statStorage').textContent = totalGB + ' GB';
-
-    // Get favorites count
-    const storedFavorites = localStorage.getItem(`favoriteFiles_${userId}`);
-    let favoriteCount = 0;
-    if (storedFavorites) {
-      try {
-        const favorites = JSON.parse(storedFavorites);
-        favoriteCount = favorites.length;
-      } catch (e) {
-        console.error('Error loading favorites:', e);
-      }
-    }
-    document.getElementById('statFavorites').textContent = favoriteCount;
-
-  } catch (error) {
-    console.error('Error loading stats:', error);
-  }
-}
-
-function toggleEditMode(btn) {
-  if (!btn) {
-    btn = document.getElementById('editBtn');
-  }
-
-  isEditMode = !isEditMode;
-
-  const inputs = document.querySelectorAll('.form-group input, .form-group select');
-
-  inputs.forEach(el => {
-    el.disabled = !isEditMode;
-  });
-
-  const saveBtn = document.getElementById('saveBtn');
-  const profileCard = document.querySelector('.profile-card');
-
-  if (isEditMode) {
-    btn.innerHTML = '❌ Cancel';
-    btn.classList.add('cancel');
-    if (saveBtn) saveBtn.style.display = 'inline-block';
-    if (profileCard) profileCard.style.boxShadow = '0 20px 60px rgba(78, 84, 200, 0.3)';
-  } else {
-    btn.innerHTML = '✏️ Edit Profile';
-    btn.classList.remove('cancel');
-    if (saveBtn) saveBtn.style.display = 'none';
-    if (profileCard) profileCard.style.boxShadow = '0 12px 40px rgba(0,0,0,0.12)';
-    
-    // Reload profile data if cancelled
-    loadProfileData();
-  }
-}
-
-function loadProfileData() {
-  try {
-    const storedProfile = JSON.parse(localStorage.getItem("profileData") || "{}");
-
-    // Load full name
-    if (storedProfile.fullName) {
-      const fullNameInput = document.getElementById('fullName');
-      const profileNameEl = document.getElementById('profileName');
-      const avatarInitialEl = document.getElementById('avatarInitial');
-      
-      if (fullNameInput) fullNameInput.value = storedProfile.fullName;
-      if (profileNameEl) profileNameEl.textContent = storedProfile.fullName;
-      if (avatarInitialEl) avatarInitialEl.textContent = storedProfile.fullName.charAt(0).toUpperCase();
-    }
-
-    // Load other fields
-    if (storedProfile.nickName) {
-      const el = document.getElementById('nickName');
-      if (el) el.value = storedProfile.nickName;
-    }
-
-    if (storedProfile.gender) {
-      const el = document.getElementById('gender');
-      if (el) el.value = storedProfile.gender;
-    }
-
-    if (storedProfile.country) {
-      const el = document.getElementById('country');
-      if (el) el.value = storedProfile.country;
-    }
-
-    if (storedProfile.language) {
-      const el = document.getElementById('language');
-      if (el) el.value = storedProfile.language;
-    }
-
-    if (storedProfile.timeZone) {
-      const el = document.getElementById('timeZone');
-      if (el) el.value = storedProfile.timeZone;
-    }
-
-    if (storedProfile.email) {
-      const profileEmailEl = document.getElementById('profileEmail');
-      const displayEmailEl = document.getElementById('displayEmail');
-      
-      if (profileEmailEl) profileEmailEl.textContent = storedProfile.email;
-      if (displayEmailEl) displayEmailEl.textContent = storedProfile.email;
-    }
-    
-    // Load avatar
-    loadAvatar();
-  } catch (error) {
-    console.error('Error loading profile data:', error);
-  }
-}
-
-function saveProfile() {
-  try {
-    const fullNameInput = document.getElementById('fullName');
-    const nickNameInput = document.getElementById('nickName');
-    const genderInput = document.getElementById('gender');
-    const countryInput = document.getElementById('country');
-    const languageInput = document.getElementById('language');
-    const timeZoneInput = document.getElementById('timeZone');
-
-    const profileData = {
-      fullName: (fullNameInput?.value || '').trim(),
-      nickName: (nickNameInput?.value || '').trim(),
-      gender: genderInput?.value || '',
-      country: countryInput?.value || '',
-      language: languageInput?.value || '',
-      timeZone: timeZoneInput?.value || '',
-      email: localStorage.getItem("userEmail") || ""
-    };
-
-    if (!profileData.fullName) {
-      alert("⚠️ Full name cannot be empty");
-      return;
-    }
-
-    // Save to localStorage
-    localStorage.setItem("profileData", JSON.stringify(profileData));
-    localStorage.setItem("userName", profileData.fullName);
-    localStorage.setItem("userInitial", profileData.fullName.charAt(0).toUpperCase());
-
-    // Update UI immediately
-    const profileNameEl = document.getElementById('profileName');
-    const avatarInitialEl = document.getElementById('avatarInitial');
-    
-    if (profileNameEl) profileNameEl.textContent = profileData.fullName;
-    if (avatarInitialEl) avatarInitialEl.textContent = profileData.fullName.charAt(0).toUpperCase();
-
-    alert("✅ Profile saved successfully");
-
-    // Disable edit mode
-    const inputs = document.querySelectorAll('.form-group input, .form-group select');
-    inputs.forEach(el => {
-      el.disabled = true;
-    });
-
-    const editBtn = document.getElementById('editBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    
-    if (editBtn) {
-      editBtn.innerHTML = '✏️ Edit Profile';
-      editBtn.classList.remove('cancel');
-    }
-    if (saveBtn) {
-      saveBtn.style.display = 'none';
-    }
-    isEditMode = false;
-  } catch (error) {
-    console.error('Error saving profile:', error);
-    alert('❌ Error saving profile. Please try again.');
-  }
-}
-
-// Initialize on page load
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    // Check authentication and get user
-    const user = await account.get();
-    userId = user.$id;
-    console.log('User authenticated:', user);
-    
-    // Load profile data
-    loadProfileData();
-    
-    // Load additional emails
-    loadAdditionalEmails();
-    
-    // Load statistics
-    await loadStats();
-    
-  } catch (error) {
-    console.error('Auth error:', error);
-    window.location.href = 'index.html';
-  }
+  loadProfileData();
+  loadAdditionalEmails();
+  loadStats();
 });
+
+window.onclick = function(event) {
+  const addEmailModal = document.getElementById('addEmailModal');
+  const deleteModal = document.getElementById('deleteAccountModal');
+  if (event.target === addEmailModal) {
+    closeAddEmailModal();
+  }
+  if (event.target === deleteModal) {
+    closeDeleteAccountModal();
+  }
+}
 </script>
 
 </body>

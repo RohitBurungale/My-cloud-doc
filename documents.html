@@ -1,591 +1,1013 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Documents - My-Cloud-Doc</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-}
-
-.header {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  padding: 16px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.logo-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 8px;
-}
-
-.back-btn {
-  background: #fff;
-  color: #1e293b;
-  border: 1px solid #ddd;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.back-btn:hover {
-  background: #f0f2ff;
-}
-
-.empty-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.empty-btn:hover {
-  background: #dc2626;
-}
-
-.nav-link {
-  color: rgba(255,255,255,0.9);
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 500;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-link:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.nav-link.active {
-  background: rgba(255,255,255,0.25);
-  font-weight: 600;
-}
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 12px;
-  transition: background 0.2s;
-  position: relative;
-}
-
-.user-section:hover {
-  background: rgba(255,255,255,0.15);
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: white;
-  color: #4e54c8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.user-name {
-  color: white;
-  font-weight: 600;
-}
-
-.user-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  padding: 8px;
-  min-width: 200px;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.2s;
-}
-
-.user-dropdown-menu.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #1e293b;
-}
-
-.dropdown-item:hover {
-  background: #f1f5f9;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: #e2e8f0;
-  margin: 8px 0;
-}
-
-.container {
-  display: flex;
-  max-width: 1400px;
-  margin: 24px auto;
-  gap: 24px;
-  padding: 0 24px;
-}
-
-.sidebar {
-  width: 280px;
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  height: fit-content;
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 8px;
-  color: #64748b;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.sidebar-item:hover {
-  background: #f1f5f9;
-  color: #1e293b;
-}
-
-.sidebar-item.active {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.sidebar-icon {
-  font-size: 20px;
-}
-
-.storage-section {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.storage-title {
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #1e293b;
-}
-
-.storage-text {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 8px;
-}
-
-.storage-bar-bg {
-  background: #e2e8f0;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.storage-bar {
-  background: linear-gradient(90deg, #4e54c8, #8f94fb);
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s;
-  border-radius: 4px;
-}
-
-.upgrade-btn {
-  margin-top: 16px;
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.upgrade-btn:hover {
-  transform: translateY(-2px);
-}
-
-.main-content {
-  flex: 1;
-}
-
-.page-header {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-.page-header h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
-  color: #1e293b;
-}
-
-.page-header p {
-  color: #64748b;
-  font-size: 16px;
-}
-
-.trash-header {
-  background: white;
-  border-radius: 16px;
-  padding: 24px 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.trash-header h2 {
-  font-size: 28px;
-  color: #1e293b;
-  flex: 1;
-  text-align: center;
-  margin: 0;
-}
-
-.files-section {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-.files-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.search-bar {
-  padding: 10px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  width: 300px;
-  font-size: 14px;
-}
-
-.sort-wrapper {
-  position: relative;
-}
-
-.sort-btn {
-  padding: 10px 16px;
-  background: #f1f5f9;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  color: #64748b;
-}
-
-.sort-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  padding: 8px;
-  min-width: 150px;
-  z-index: 100;
-}
-
-.sort-menu.hidden {
-  display: none;
-}
-
-.sort-option {
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.sort-option:hover {
-  background: #f1f5f9;
-}
-
-#files {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.file-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  padding: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.file-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 16px 32px rgba(0,0,0,0.12);
-  border-color: #4e54c8;
-}
-
-.file-card.highlight {
-  border-color: #4e54c8;
-  box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
-}
-
-.favorite-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255,255,255,0.8);
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
-  color: #cbd5e1;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 6px 10px;
-  backdrop-filter: blur(10px);
-}
-
-.favorite-toggle:hover {
-  transform: scale(1.15) rotate(10deg);
-  background: #fef3c7;
-  border-color: #fcd34d;
-}
-
-.favorite-toggle.active {
-  color: #f59e0b;
-  background: #fef3c7;
-  border-color: #fcd34d;
-}
-
-.file-preview {
-  font-size: 48px;
-  text-align: center;
-  padding: 20px 0;
-}
-
-.file-name {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #1e293b;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.file-meta {
-  font-size: 13px;
-  color: #64748b;
-  margin-bottom: 16px;
-}
-
-.file-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.file-actions button {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.file-actions .open {
-  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
-  color: #4e54c8;
-  border: 1px solid #c7d2fe;
-}
-
-.file-actions .open:hover {
-  background: linear-gradient(135deg, #c7d2fe 0%, #bfdbfe 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(78, 84, 200, 0.2);
-}
-
-.file-actions .download {
-  background: linear-gradient(135deg, #dbeafe 0%, #d1d5db 100%);
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
-}
-
-.file-actions .download:hover {
-  background: linear-gradient(135deg, #bfdbfe 0%, #a5b4fc 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
-
-.file-actions .rename {
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  color: #d97706;
-  border: 1px solid #fcd34d;
-}
-
-.file-actions .rename:hover {
-  background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
-}
-
-.file-actions .delete {
-  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-}
-
-.file-actions .delete:hover {
-  background: linear-gradient(135deg, #fecaca 0%, #f87171 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
-}
-
-.file-actions button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: #94a3b8;
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    width: 100%;
-  }
-  
-  .nav-links {
-    display: none;
-  }
-  
-  #files {
-    grid-template-columns: 1fr;
-  }
-  
-  .search-bar {
-    width: 100%;
-  }
-  
-  .files-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Documents - My-Cloud-Doc</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary-color: #f8fafc;
+      --accent-color: #f59e0b;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --text-color: #1e293b;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+      --hover-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-hover: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      color: var(--text-color);
+    }
+
+    /* ===== HEADER (Matching home.html) ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      backdrop-filter: blur(5px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-link {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+      background: rgba(255,255,255,0.25);
+      font-weight: 600;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      position: relative;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .user-section:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .user-name {
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      padding: 8px;
+      min-width: 200px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s;
+    }
+
+    .user-dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-color);
+    }
+
+    .dropdown-item:hover {
+      background: var(--hover-color);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 8px 0;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      display: flex;
+      max-width: 1400px;
+      margin: 20px auto;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 80px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--text-light);
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    .sidebar-item:hover {
+      background: var(--hover-color);
+      color: var(--text-color);
+      transform: translateX(4px);
+    }
+
+    .sidebar-item.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      font-weight: 600;
+    }
+
+    .sidebar-icon {
+      font-size: 18px;
+    }
+
+    .storage-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .storage-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-color);
+    }
+
+    .storage-text {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .storage-bar-bg {
+      background: var(--border-color);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .storage-bar {
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+      height: 100%;
+      width: 0%;
+      border-radius: 3px;
+      transition: width 1s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .storage-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .upgrade-btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .upgrade-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .page-header {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .page-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-header p {
+      color: var(--text-light);
+      font-size: 15px;
+    }
+
+    .files-section {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .files-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .bulk-actions {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 8px;
+      border: 1px solid var(--accent-color);
+      animation: slideDown 0.3s ease;
+    }
+
+    .bulk-actions.active {
+      display: flex;
+    }
+
+    /* Draggable Selected Box */
+    .selected-items-box {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+      cursor: move;
+      user-select: none;
+      z-index: 1000;
+      display: none;
+      min-width: 200px;
+      transition: all 0.3s ease;
+    }
+
+    .selected-items-box.active {
+      display: block;
+      animation: bounceIn 0.5s ease;
+    }
+
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .selected-items-box.dragging {
+      opacity: 0.8;
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.6);
+    }
+
+    .selected-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .selected-box-title {
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .selected-box-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .selected-box-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .selected-box-count {
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    .selected-box-label {
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+
+    .selected-box-hint {
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.8;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
+    /* Trash Drop Zone Highlight */
+    .sidebar-item.trash-zone {
+      position: relative;
+    }
+
+    .sidebar-item.trash-zone.drag-over {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+      border: 2px dashed var(--danger-color) !important;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .sidebar-item.trash-zone.drag-over::after {
+      content: 'Drop to Delete';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--danger-color);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bulk-actions-text {
+      font-weight: 600;
+      color: #92400e;
+      font-size: 14px;
+    }
+
+    .bulk-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bulk-btn-delete {
+      background: #dc2626;
+      color: white;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+    }
+
+    .bulk-btn-delete:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+    }
+
+    .bulk-btn-cancel {
+      background: white;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .bulk-btn-cancel:hover {
+      background: var(--hover-color);
+      transform: translateY(-1px);
+    }
+
+    .select-all-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .select-all-wrapper:hover {
+      background: #e0f2fe;
+      border-color: var(--primary-color);
+    }
+
+    .select-all-wrapper input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary-color);
+    }
+
+    .select-all-label {
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .files-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-color);
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 240px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .sort-select {
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+      outline: none;
+      min-width: 140px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sort-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    #files {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .file-card {
+      background: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      animation: fadeInUp 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .file-card.selected {
+      border-color: var(--primary-color);
+      background: #dbeafe;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+
+    .file-checkbox {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      z-index: 10;
+      accent-color: var(--primary-color);
+    }
+
+    .fav-star {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--secondary-color);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .fav-star:hover {
+      transform: scale(1.1);
+      background: #fffbeb;
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .fav-star.active {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    }
+
+    .fav-star.active:hover {
+      transform: scale(1.15);
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .file-card:nth-child(1) { animation-delay: 0.05s; }
+    .file-card:nth-child(2) { animation-delay: 0.1s; }
+    .file-card:nth-child(3) { animation-delay: 0.15s; }
+    .file-card:nth-child(4) { animation-delay: 0.2s; }
+    .file-card:nth-child(5) { animation-delay: 0.25s; }
+    .file-card:nth-child(6) { animation-delay: 0.3s; }
+
+    .file-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--primary-color);
+      background: white;
+    }
+
+    .file-icon {
+      font-size: 32px;
+      text-align: center;
+      margin-bottom: 12px;
+      color: var(--primary-color);
+    }
+
+    .file-name {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--text-color);
+    }
+
+    .file-meta {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .file-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-view {
+      background: #dbeafe;
+      color: var(--primary-color);
+    }
+
+    .btn-view:hover {
+      background: #bfdbfe;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-delete:hover {
+      background: #fecaca;
+      transform: translateY(-1px);
+    }
+
+    .btn-download {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .btn-download:hover {
+      background: #a7f3d0;
+      transform: translateY(-1px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-light);
+      grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 0;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      border-radius: 12px 12px 0 0;
+      color: white;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-size: 14px;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .modal-footer {
+      padding: 16px 20px;
+      background: var(--secondary-color);
+      border-radius: 0 0 12px 12px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+    }
+
+    .btn-secondary {
+      padding: 8px 16px;
+      background: var(--secondary-color);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        position: static;
+      }
+      .nav-links {
+        display: none;
+      }
+      .search-bar {
+        width: 100%;
+      }
+      #files {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
+<!-- HEADER (Matching home.html) -->
 <div class="header">
   <a href="home.html" class="logo">
     <div class="logo-icon">🛡️</div>
@@ -593,264 +1015,766 @@ body {
   </a>
   
   <div class="nav-links">
-    <button class="back-btn" onclick="goBack()" title="Go Back">⬅ Back</button>
     <a href="home.html" class="nav-link">
-      <span>🏠</span> Dashboard
+      <i class="fas fa-home"></i> Dashboard
     </a>
     <a href="documents.html" class="nav-link active">
-      <span>📄</span> My Documents
+      <i class="fas fa-file-alt"></i> My Documents
     </a>
     <a href="favorites.html" class="nav-link">
-      <span>⭐</span> Favorites
+      <i class="fas fa-star"></i> Favorites
     </a>
   </div>
   
   <div class="user-section" id="userSection" onclick="toggleUserDropdown()">
     <div class="user-avatar" id="userAvatar">U</div>
     <span class="user-name" id="userName">User</span>
-    <span style="color: white;">▼</span>
+    <i class="fas fa-chevron-down" style="color: white; font-size: 12px;"></i>
     
     <div class="user-dropdown-menu" id="userDropdownMenu">
       <div class="dropdown-item" onclick="goToProfile()">
-        <span>👤</span> Profile Settings
+        <i class="fas fa-user"></i> Profile Settings
       </div>
       <div class="dropdown-divider"></div>
       <div class="dropdown-item" onclick="logout()">
-        <span>🚪</span> Logout
+        <i class="fas fa-sign-out-alt"></i> Logout
       </div>
     </div>
   </div>
 </div>
 
 <div class="container">
-  
   <div class="sidebar">
     <a href="home.html" class="sidebar-item">
-      <span class="sidebar-icon">📊</span>
+      <i class="fas fa-chart-line sidebar-icon"></i>
       <span>Dashboard</span>
     </a>
     <a href="documents.html" class="sidebar-item active">
-      <span class="sidebar-icon">📄</span>
+      <i class="fas fa-file-alt sidebar-icon"></i>
       <span>My Documents</span>
     </a>
     <a href="favorites.html" class="sidebar-item">
-      <span class="sidebar-icon">⭐</span>
+      <i class="fas fa-star sidebar-icon"></i>
       <span>Favorites</span>
     </a>
     <a href="#" class="sidebar-item">
-      <span class="sidebar-icon">👥</span>
+      <i class="fas fa-users sidebar-icon"></i>
       <span>Shared with Me</span>
     </a>
-    <a href="#" class="sidebar-item">
-      <span class="sidebar-icon">🗑️</span>
+    <a href="trash.html" class="sidebar-item trash-zone" id="trashZone">
+      <i class="fas fa-trash-alt sidebar-icon"></i>
       <span>Trash</span>
     </a>
-    
+
     <div class="storage-section">
       <div class="storage-title">Storage</div>
-      <div class="storage-text" id="storageText">0 GB / 50 GB used</div>
+      <div class="storage-text" id="storageText">0 MB / 50 GB used</div>
       <div class="storage-bar-bg">
         <div class="storage-bar" id="storageBar"></div>
       </div>
-      <button class="upgrade-btn">Upgrade Plan</button>
+      <button class="upgrade-btn"><i class="fas fa-bolt"></i> Upgrade Plan</button>
     </div>
   </div>
-  
+
   <div class="main-content">
-    
     <div class="page-header">
-      <h1>📄 My Documents</h1>
-      <p>All your uploaded documents in one place</p>
+      <h1><i class="fas fa-folder-open"></i> My Documents</h1>
+      <p>All your uploaded documents in one secure place</p>
     </div>
-    
-    <div class="trash-header" id="trashHeader" style="display: none;">
-      <button class="back-btn" onclick="goBack()">⬅ Back</button>
-      <h2>🗑️ Trash</h2>
-      <button class="empty-btn" onclick="emptyTrash()">Empty Trash</button>
-    </div>
-    
+
     <div class="files-section">
       <div class="files-header">
-        <div class="section-title">All Documents</div>
-        
-        <div style="display: flex; gap: 12px;">
-          <input type="text" id="searchInput" class="search-bar" placeholder="Search files..." oninput="filterFiles()">
-          
-          <div class="sort-wrapper">
-            <button class="sort-btn" onclick="toggleSortMenu()">Sort ▼</button>
-            <div class="sort-menu hidden" id="sortMenu">
-              <div class="sort-option" onclick="setSort('newest')">Newest First</div>
-              <div class="sort-option" onclick="setSort('oldest')">Oldest First</div>
-              <div class="sort-option" onclick="setSort('az')">A-Z</div>
-              <div class="sort-option" onclick="setSort('za')">Z-A</div>
-            </div>
+        <div class="section-title">
+          <i class="fas fa-file"></i> All Documents
+        </div>
+        <div class="controls">
+          <div class="select-all-wrapper">
+            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+            <label for="selectAllCheckbox" class="select-all-label">Select All</label>
           </div>
+          <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search files..." />
+          </div>
+          <select class="sort-select" id="sortSelect">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">Name A–Z</option>
+            <option value="za">Name Z–A</option>
+          </select>
         </div>
       </div>
-      
-      <div id="files"></div>
+
+      <div class="bulk-actions" id="bulkActions">
+        <span class="bulk-actions-text"><i class="fas fa-check-circle"></i> <span id="selectedCount">0</span> file(s) selected</span>
+        <button class="bulk-btn bulk-btn-delete" onclick="bulkDeleteFiles()">
+          <i class="fas fa-trash-alt"></i> Delete Selected
+        </button>
+        <button class="bulk-btn bulk-btn-cancel" onclick="clearSelection()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+
+      <div id="files">
+        <div class="empty-state">
+          <div class="empty-icon">📂</div>
+          <div class="empty-title">Loading documents...</div>
+          <p>Please wait...</p>
+        </div>
+      </div>
     </div>
-    
   </div>
-  
 </div>
 
-<script src="config.js"></script>
-<script src="home.js"></script>
+<!-- Selected Items Draggable Box -->
+<div class="selected-items-box" id="selectedItemsBox">
+  <div class="selected-box-header">
+    <div class="selected-box-title">
+      <i class="fas fa-check-circle"></i> Selected
+    </div>
+    <button class="selected-box-close" onclick="clearSelection()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="selected-box-count" id="selectedBoxCount">0</div>
+  <div class="selected-box-label">file(s) selected</div>
+  <div class="selected-box-hint">
+    <i class="fas fa-hand-rock"></i> Drag to Trash to delete
+  </div>
+</div>
 
+<!-- Rename Modal -->
+<div id="renameModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fas fa-edit"></i> Rename File</h2>
+    </div>
+    <div class="modal-body">
+      <label class="modal-label">New File Name</label>
+      <input type="text" id="renameInput" class="modal-input" placeholder="Enter new name">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeRenameModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmRename()">Rename</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
 <script>
-// 1. Get ONLY what is in localStorage. 
-// Do not provide hardcoded defaults if you want to see your uploaded files.
-let documents = JSON.parse(localStorage.getItem("documents")) || [];
+// ========== APPWRITE CONFIG ==========
+const client = new Appwrite.Client()
+  .setEndpoint("https://fra.cloud.appwrite.io/v1")
+  .setProject("6956479a002cb6075a9d");
 
-function deleteFromDocuments(id) {
-    const index = documents.findIndex(file => file.id === id);
-    if (index === -1) return;
+const account = new Appwrite.Account(client);
+const storage = new Appwrite.Storage(client);
+const databases = new Appwrite.Databases(client);
 
-    // Get the current trash or start fresh
-    let trash = JSON.parse(localStorage.getItem("myCloudTrash")) || [];
-    const deletedFile = documents[index];
+const BUCKET_ID = "6957d9df0019e749a227";
+const DATABASE_ID = "6956ba3a003ab5b4406a";
+const COLLECTION_ID = "files";
 
-    // Move to trash with a timestamp
-    trash.push({
-        ...deletedFile,
-        deletedAt: new Date().toISOString().split("T")[0]
-    });
+let userId = null;
+let currentRenameDocId = null;
+let currentRenameFileId = null;
+let selectedFiles = new Set(); // Track selected files
+let allDocuments = []; // Store all documents for selection
 
-    // Remove from documents array
-    documents.splice(index, 1);
+// ========== INIT ==========
+async function init() {
+  try {
+    const user = await account.get();
+    userId = user.$id;
     
-    // 2. SYNC BOTH KEYS: This is critical so the Trash page sees the change
-    localStorage.setItem("documents", JSON.stringify(documents));
-    localStorage.setItem("myCloudTrash", JSON.stringify(trash));
-
-    alert("File moved to Trash");
-    renderDocuments();
+    document.getElementById('userName').textContent = user.name || 'User';
+    document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+    
+    await Promise.all([
+      renderFiles(),
+      updateStorageBar()
+    ]);
+  } catch (error) {
+    console.error("Auth failed:", error);
+    window.location.href = "index.html";
+  }
 }
 
-function renderDocuments() {
-    const container = document.getElementById('files');
-    container.innerHTML = '';
+// ========== RENDER FILES FROM APPWRITE ==========
+async function renderFiles() {
+  const container = document.getElementById('files');
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
+
+  try {
+    const res = await databases.listDocuments(
+      DATABASE_ID,
+      COLLECTION_ID,
+      [Appwrite.Query.equal("userId", userId)]
+    );
+
+    let docs = res.documents;
+    allDocuments = docs; // Store for selection management
+
+    // SYNC WITH LOCALSTORAGE - Initialize if not exists
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    docs.forEach(doc => {
+      const existsInLocal = localDocs.find(d => d.id === doc.fileId);
+      if (!existsInLocal) {
+        // Add missing documents to localStorage
+        localDocs.push({
+          id: doc.fileId,
+          name: doc.fileName,
+          size: formatFileSize(doc.fileSize),
+          uploadedAt: doc.$createdAt,
+          isFavorite: false
+        });
+      }
+    });
     
-    // If the array is empty, show the empty state
-    if (documents.length === 0) {
-        container.innerHTML = `
-            <div class="empty">
-                <h3>No files found</h3>
-                <p>Upload new documents to see them here.</p>
-            </div>`;
+    // Remove documents from localStorage that don't exist in Appwrite
+    const syncedLocalDocs = localDocs.filter(localDoc => 
+      docs.some(doc => doc.fileId === localDoc.id)
+    );
+    localStorage.setItem("documents", JSON.stringify(syncedLocalDocs));
+
+    // Filter
+    docs = docs.filter(doc => doc.fileName.toLowerCase().includes(searchTerm));
+
+    // Sort
+    if (sort === 'az') docs.sort((a, b) => a.fileName.localeCompare(b.fileName));
+    else if (sort === 'za') docs.sort((a, b) => b.fileName.localeCompare(a.fileName));
+    else if (sort === 'oldest') docs.sort((a, b) => new Date(a.$createdAt) - new Date(b.$createdAt));
+    else docs.sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt)); // newest
+
+    if (docs.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📁</div>
+          <div class="empty-title">No documents found</div>
+          <p>${searchTerm ? 'Try adjusting your search' : 'Upload files from the Dashboard'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = docs.map(doc => `
+      <div class="file-card ${selectedFiles.has(doc.$id) ? 'selected' : ''}" id="card-${doc.$id}">
+        <input type="checkbox" class="file-checkbox" 
+               ${selectedFiles.has(doc.$id) ? 'checked' : ''} 
+               onchange="toggleFileSelection('${doc.$id}')"
+               onclick="event.stopPropagation()">
+        <div class="fav-star ${isDocFavorite(doc.fileId) ? 'active' : ''}" onclick="toggleFavorite('${doc.fileId}', '${escapeHtml(doc.fileName)}')" title="${isDocFavorite(doc.fileId) ? 'Remove from favorites' : 'Add to favorites'}">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="file-icon">${getIconForFile(doc.fileName)}</div>
+        <div class="file-name" title="${escapeHtml(doc.fileName)}">${escapeHtml(doc.fileName)}</div>
+        <div class="file-meta">
+          ${formatFileSize(doc.fileSize)} • ${new Date(doc.$createdAt).toLocaleDateString()}
+        </div>
+        <div class="file-actions">
+          <button class="action-btn btn-view" onclick="viewFile('${doc.fileId}')">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button class="action-btn btn-download" onclick="downloadFile('${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button class="action-btn" style="background: #fef3c7; color: #d97706;" onclick="openRenameModal('${doc.$id}', '${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-edit"></i> Rename
+          </button>
+          <button class="action-btn btn-delete" onclick="deleteFile('${doc.$id}', '${doc.fileId}', '${escapeHtml(doc.fileName)}')">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error("Load files error:", error);
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-title">Failed to load documents</div>
+        <p>Please try refreshing the page</p>
+      </div>
+    `;
+  }
+}
+
+// ========== FILE ICON ==========
+function getIconForFile(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  switch(ext) {
+    case 'pdf': return '📄';
+    case 'doc': case 'docx': return '📘';
+    case 'xls': case 'xlsx': return '📊';
+    case 'png': case 'jpg': case 'jpeg': case 'gif': case 'svg': return '🖼️';
+    case 'txt': return '📝';
+    case 'zip': case 'rar': return '📦';
+    case 'mp4': case 'avi': case 'mov': return '🎥';
+    case 'mp3': case 'wav': return '🎵';
+    default: return '📄';
+  }
+}
+
+// ========== FORMAT DATE & SIZE ==========
+function formatFileSize(bytes) {
+  if (!bytes || bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ========== VIEW FILE ==========
+function viewFile(fileId) {
+  const url = storage.getFileView(BUCKET_ID, fileId);
+  window.open(url, '_blank');
+}
+
+// ========== DOWNLOAD FILE ==========
+function downloadFile(fileId, fileName) {
+  const url = storage.getFileDownload(BUCKET_ID, fileId);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ========== CHECK IF FAVORITE ==========
+function isDocFavorite(fileId) {
+  const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+  const doc = localDocs.find(d => d.id === fileId);
+  return doc && doc.isFavorite === true;
+}
+
+// ========== TOGGLE FAVORITE ==========
+function toggleFavorite(fileId, fileName) {
+  const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+  const docIndex = localDocs.findIndex(d => d.id === fileId);
+  
+  if (docIndex !== -1) {
+    localDocs[docIndex].isFavorite = !localDocs[docIndex].isFavorite;
+    localStorage.setItem("documents", JSON.stringify(localDocs));
+    
+    const status = localDocs[docIndex].isFavorite ? 'added to' : 'removed from';
+    const icon = localDocs[docIndex].isFavorite ? '⭐' : '☆';
+    alert(`${icon} "${fileName}" ${status} favorites`);
+    
+    renderFiles();
+  }
+}
+
+// ========== SELECTION MANAGEMENT ==========
+function toggleFileSelection(docId) {
+    const card = document.getElementById(`card-${docId}`);
+    const checkbox = card.querySelector('.file-checkbox');
+    if (checkbox.checked) {
+        selectedFiles.add(docId);
+    } else {
+        selectedFiles.delete(docId);
+    }
+    updateSelectionUI();
+}
+
+function updateSelectionUI() {
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCount = document.getElementById('selectedCount');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const selectedBox = document.getElementById('selectedItemsBox');
+    const selectedBoxCount = document.getElementById('selectedBoxCount');
+
+    // Update file card visuals
+    allDocuments.forEach(doc => {
+        const card = document.getElementById(`card-${doc.$id}`);
+        if (card) {
+            if (selectedFiles.has(doc.$id)) {
+                card.classList.add('selected');
+                card.querySelector('.file-checkbox').checked = true;
+            } else {
+                card.classList.remove('selected');
+                card.querySelector('.file-checkbox').checked = false;
+            }
+        }
+    });
+
+    // Show/hide bulk actions & draggable box
+    if (selectedFiles.size > 0) {
+        bulkActions.classList.add('active');
+        selectedCount.textContent = selectedFiles.size;
+
+        // Ensure draggable box is visible
+        selectedBox.classList.add('active');
+        selectedBoxCount.textContent = selectedFiles.size;
+    } else {
+        bulkActions.classList.remove('active');
+        selectedBox.classList.remove('active');
+    }
+
+    // Update "Select All" checkbox state
+    if (allDocuments.length > 0) {
+        const allSelected = selectedFiles.size === allDocuments.length;
+        const someSelected = selectedFiles.size > 0 && !allSelected;
+        selectAllCheckbox.checked = allSelected;
+        selectAllCheckbox.indeterminate = someSelected;
+    }
+
+  
+  // Update select all checkbox state
+  if (allDocuments.length > 0) {
+    selectAllCheckbox.checked = selectedFiles.size === allDocuments.length;
+    selectAllCheckbox.indeterminate = selectedFiles.size > 0 && selectedFiles.size < allDocuments.length;
+  }
+}
+
+function clearSelection() {
+  selectedFiles.clear();
+  updateSelectionUI();
+  renderFiles();
+}
+
+// ========== BULK DELETE ==========
+async function bulkDeleteFiles() {
+    if (selectedFiles.size === 0) {
+        alert('⚠️ No files selected');
+        return;
+    }
+    const count = selectedFiles.size;
+    if (!confirm(`Move ${count} file(s) to Trash? They won’t be permanently deleted yet.`)) {
+        return;
+    }
+
+    const deleteBtn = document.querySelector('.bulk-btn-delete');
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Moving to Trash...';
+
+    let successCount = 0;
+    for (const docId of selectedFiles) {
+        try {
+            const doc = allDocuments.find(d => d.$id === docId);
+            if (!doc) continue;
+
+            // Soft delete: mark as trashed
+            await databases.updateDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                docId,
+                { isTrashed: true }
+            );
+
+            // Update localStorage
+            const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+            const idx = localDocs.findIndex(d => d.id === doc.fileId);
+            if (idx !== -1) {
+                localDocs[idx].isTrashed = true;
+                localStorage.setItem("documents", JSON.stringify(localDocs));
+            }
+
+            successCount++;
+        } catch (error) {
+            console.error("Bulk soft delete error:", error);
+        }
+    }
+
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete Selected';
+    selectedFiles.clear();
+
+    alert(`🗑️ ${successCount} file(s) moved to Trash`);
+    await renderFiles();
+    await updateStorageBar();
+    updateSelectionUI();
+}
+
+// ========== DELETE SINGLE FILE ==========
+async function deleteFile(docId, fileId, fileName) {
+    if (!confirm(`Permanently delete "${fileName}"? This cannot be undone.`)) return;
+    
+    try {
+        // 1. Delete from Appwrite Storage
+        await storage.deleteFile(BUCKET_ID, fileId);
+        
+        // 2. Delete from Appwrite Database
+        await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, docId);
+        
+        // 3. Remove from localStorage
+        const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+        const updatedDocs = localDocs.filter(doc => doc.id !== fileId);
+        localStorage.setItem("documents", JSON.stringify(updatedDocs));
+        
+        alert(`✅ "${fileName}" has been permanently deleted`);
+        await renderFiles();
+        await updateStorageBar();
+        
+    } catch (error) {
+        console.error("Delete error:", error);
+        alert('❌ Failed to delete file');
+    }
+}
+
+// ========== BULK DELETE FILES ==========
+async function bulkDeleteFiles() {
+    if (selectedFiles.size === 0) {
+        alert('⚠️ No files selected');
         return;
     }
     
-    documents.forEach(file => {
-        const card = document.createElement('div');
-        card.className = 'file-card';
-        card.innerHTML = `
-            <div class="file-preview">📄</div>
-            <div class="file-name">${file.name}</div>
-            <div class="file-meta">Size: ${file.size}</div>
-            <div class="file-actions">
-                <button class="btn-open">Open</button>
-                <button class="btn-delete" onclick="deleteFromDocuments('${file.id}')">Delete</button>
-            </div>
-        `;
-        container.appendChild(card);
-    });
+    const count = selectedFiles.size;
+    if (!confirm(`Permanently delete ${count} file(s)? This cannot be undone.`)) return;
+    
+    const deleteBtn = document.querySelector('.bulk-btn-delete');
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+    
+    let successCount = 0;
+    const errors = [];
+    
+    for (const docId of selectedFiles) {
+        try {
+            const doc = allDocuments.find(d => d.$id === docId);
+            if (!doc) continue;
+            
+            // Delete from Storage
+            await storage.deleteFile(BUCKET_ID, doc.fileId);
+            
+            // Delete from Database  
+            await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, docId);
+            
+            successCount++;
+        } catch (error) {
+            console.error(`Failed to delete ${docId}:`, error);
+            errors.push(docId);
+        }
+    }
+    
+    // Update localStorage
+    const localDocs = JSON.parse(localStorage.getItem("documents")) || [];
+    const remainingDocs = localDocs.filter(doc => 
+        !Array.from(selectedFiles).includes(doc.id)
+    );
+    localStorage.setItem("documents", JSON.stringify(remainingDocs));
+    
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete Selected';
+    selectedFiles.clear();
+    
+    if (errors.length > 0) {
+        alert(`⚠️ ${successCount} file(s) deleted successfully. ${errors.length} failed.`);
+    } else {
+        alert(`✅ ${successCount} file(s) permanently deleted`);
+    }
+    
+    await renderFiles();
+    await updateStorageBar();
+    updateSelectionUI();
 }
-
-document.addEventListener('DOMContentLoaded', renderDocuments);
-let trash = JSON.parse(localStorage.getItem("trash")) || [];
-
-function saveData() {
-  localStorage.setItem("documents", JSON.stringify(documents));
-  localStorage.setItem("trash", JSON.stringify(trash));
+async function bulkDeleteFiles() {
+    if (selectedFiles.size === 0) {
+        alert('⚠️ No files selected');
+        return;
+    }
+    
+    const count = selectedFiles.size;
+    if (!confirm(`Move ${count} file(s) to Trash?`)) return;
+    
+    try {
+        const docs = JSON.parse(localStorage.getItem('documents') || '[]');
+        const trash = JSON.parse(localStorage.getItem('trash') || '[]');
+        
+        for (const docId of selectedFiles) {
+            const doc = allDocuments.find(d => d.$id === docId);
+            if (!doc) continue;
+            
+            // Remove from documents
+            const fileIndex = docs.findIndex(d => d.id === doc.fileId);
+            if (fileIndex !== -1) {
+                const deletedFile = docs.splice(fileIndex, 1)[0];
+                // Add to trash
+                trash.push({
+                    ...deletedFile,
+                    deletedAt: new Date().toISOString()
+                });
+            }
+        }
+        
+        localStorage.setItem('documents', JSON.stringify(docs));
+        localStorage.setItem('trash', JSON.stringify(trash));
+        
+        selectedFiles.clear();
+        alert(`🗑️ ${count} file(s) moved to Trash`);
+        await renderFiles();
+        updateSelectionUI();
+        
+    } catch (error) {
+        console.error("Bulk delete error:", error);
+        alert('❌ Failed to move files to Trash');
+    }
 }
-
-function deletePermanently(id) {
-  if (!confirm("Delete permanently?")) return;
-  trash = trash.filter(file => file.id !== id);
-  saveData();
-  renderDocuments();
-}
-
-function restoreFile(id) {
-  const index = trash.findIndex(file => file.id === id);
-  if (index === -1) return;
-
-  documents.push(trash[index]);
-  trash.splice(index, 1);
-  
-  saveData();
-  alert("File restored");
-  renderDocuments();
-}
-
-function deleteFromDocuments(id) {
-  const index = documents.findIndex(file => file.id === id);
-  if (index === -1) return;
-
-  const deletedFile = documents[index];
-
-  trash.push({
-    ...deletedFile,
-    deletedAt: new Date().toISOString().split("T")[0]
-  });
-
-  documents.splice(index, 1);
-  saveData();
-
-  alert("File moved to Trash");
-  renderDocuments();
-}
-
-function goBack() {
-  window.location.href = "home.html";
-}
-
-function emptyTrash() {
-  if (!confirm("Are you sure you want to permanently delete all items in Trash?")) return;
-  trash = [];
-  saveData();
-  alert("Trash emptied");
-  renderDocuments();
-}
-
-function renderDocuments() {
-  // Render documents and trash based on current view
-  const filesContainer = document.getElementById('files');
-  if (!filesContainer) return;
-  
-  filesContainer.innerHTML = '';
-  
-  const filesToRender = documents.length > 0 ? documents : trash;
-  
-  if (filesToRender.length === 0) {
-    filesContainer.innerHTML = '<div class="empty">No files found</div>';
-    return;
+// ========== UPDATE STORAGE BAR ==========
+async function updateStorageBar() {
+  try {
+    const res = await databases.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Appwrite.Query.equal("userId", userId)
+    ]);
+    
+    let totalBytes = res.documents.reduce((sum, doc) => sum + (doc.fileSize || 0), 0);
+    const totalMB = totalBytes / (1024 * 1024);
+    const percentage = Math.min((totalMB / (50 * 1024)) * 100, 100);
+    
+    document.getElementById('storageBar').style.width = percentage + '%';
+    document.getElementById('storageText').textContent = `${totalMB.toFixed(2)} MB / 50 GB used`;
+  } catch (error) {
+    console.error("Storage update error:", error);
   }
-  
-  filesToRender.forEach(file => {
-    const fileCard = document.createElement('div');
-    fileCard.className = 'file-card';
-    fileCard.innerHTML = `
-      <div class="favorite-toggle">⭐</div>
-      <div class="file-preview">📄</div>
-      <div class="file-name">${file.name}</div>
-      <div class="file-meta">${file.size}</div>
-      <div class="file-actions">
-        <button class="open">Open</button>
-        <button class="download">Download</button>
-      </div>
-    `;
-    filesContainer.appendChild(fileCard);
-  });
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  saveData();
-  renderDocuments();
+// ========== SEARCH & SORT ==========
+document.getElementById('searchInput').addEventListener('input', () => {
+  renderFiles();
+  updateSelectionUI();
 });
+document.getElementById('sortSelect').addEventListener('change', () => {
+  renderFiles();
+  updateSelectionUI();
+});
+
+// ========== USER DROPDOWN ==========
+function toggleUserDropdown() {
+  document.getElementById('userDropdownMenu').classList.toggle('active');
+}
+
+function goToProfile() {
+  window.location.href = 'profile.html';
+}
+
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    account.deleteSession('current').then(() => {
+      window.location.href = 'index.html';
+    });
+  }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const userSection = document.getElementById('userSection');
+  const dropdown = document.getElementById('userDropdownMenu');
+  if (userSection && !userSection.contains(e.target)) {
+    dropdown.classList.remove('active');
+  }
+});
+
+// Close modal when clicking outside
+document.getElementById('renameModal').addEventListener('click', (e) => {
+  if (e.target.id === 'renameModal') {
+    closeRenameModal();
+  }
+});
+
+// ========== INIT ON LOAD ==========
+document.addEventListener('DOMContentLoaded', init);
+
+// ========== DRAG AND DROP FOR SELECTED BOX ==========
+let isDragging = false;
+let xOffset = 0;
+let yOffset = 0;
+const dragElement = document.getElementById('selectedItemsBox');
+const trashZone = document.getElementById('trashZone');
+
+if (dragElement && trashZone) {
+    dragElement.addEventListener('mousedown', dragStart);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragEnd);
+}
+
+function dragStart(e) {
+  if (e.target.classList.contains('selected-box-close')) return;
+  
+  initialX = e.clientX - xOffset;
+  initialY = e.clientY - yOffset;
+
+  if (e.target === dragElement || dragElement.contains(e.target)) {
+    isDragging = true;
+    dragElement.classList.add('dragging');
+  }
+}
+
+function drag(e) {
+  if (isDragging) {
+    e.preventDefault();
+    
+    currentX = e.clientX - initialX;
+    currentY = e.clientY - initialY;
+
+    xOffset = currentX;
+    yOffset = currentY;
+
+    setTranslate(currentX, currentY, dragElement);
+    
+    // Check if over trash zone
+    const trashRect = trashZone.getBoundingClientRect();
+    const boxRect = dragElement.getBoundingClientRect();
+    
+    const isOverTrash = !(
+      boxRect.right < trashRect.left ||
+      boxRect.left > trashRect.right ||
+      boxRect.bottom < trashRect.top ||
+      boxRect.top > trashRect.bottom
+    );
+    
+    if (isOverTrash) {
+      trashZone.classList.add('drag-over');
+    } else {
+      trashZone.classList.remove('drag-over');
+    }
+  }
+}
+
+function dragEnd(e) {
+  if (isDragging) {
+    isDragging = false;
+    dragElement.classList.remove('dragging');
+    
+    // Check if dropped on trash
+    const trashRect = trashZone.getBoundingClientRect();
+    const boxRect = dragElement.getBoundingClientRect();
+    
+    const isOverTrash = !(
+      boxRect.right < trashRect.left ||
+      boxRect.left > trashRect.right ||
+      boxRect.bottom < trashRect.top ||
+      boxRect.top > trashRect.bottom
+    );
+    
+    trashZone.classList.remove('drag-over');
+    
+    if (isOverTrash && selectedFiles.size > 0) {
+      // Reset position
+      xOffset = 0;
+      yOffset = 0;
+      setTranslate(0, 0, dragElement);
+      
+      // Trigger delete
+      bulkDeleteFiles();
+    }
+  }
+}
+
+function setTranslate(xPos, yPos, el) {
+  el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+}
+// After fetching docs:
+let docs = res.documents.filter(doc => !doc.isTrashed); // ← ADD THIS LINE
+allDocuments = docs;
+
 </script>
 
 </body>
